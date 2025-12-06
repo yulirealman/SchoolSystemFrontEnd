@@ -75,7 +75,7 @@ import { Avatar, Document, HelpFilled, Histogram, HomeFilled, InfoFilled, Menu, 
           </el-scrollbar>
         </el-aside>
         <el-main router>
-          <router-view> </router-view>
+          <router-view></router-view>
         </el-main>
       </el-container>
     </el-container>

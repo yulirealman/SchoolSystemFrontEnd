@@ -14,15 +14,23 @@ import LoginView from '@/views/login/index.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/index',name: 'index',component: IndexView },
-    { path: '/clazz',name: 'clazz',component: ClazzView },
-    { path: '/dept',name: 'dept',component: DeptView },
-    { path: '/emp',name: 'emp',component: EmpView },
-    { path: '/log',name: 'log',component: LogView },
-    { path: '/stu',name: 'stu',component: StuView },
-    { path: '/empReport',name: 'empReport',component: EmpReportView },
-    { path: '/stuReport',name: 'stuReport',component: StuReportView },
-    { path: '/login',name: 'login',component: LoginView },
+
+    { path:'/',
+      name: 'layout',
+      component: LayoutView,
+      redirect: '/index',
+      children: [
+        { path: 'index',name: 'index',component: IndexView },
+        { path: 'clazz',name: 'clazz',component: ClazzView },
+        { path: 'dept',name: 'dept',component: DeptView },
+        { path: 'emp',name: 'emp',component: EmpView },
+        { path: 'log',name: 'log',component: LogView },
+        { path: 'stu',name: 'stu',component: StuView },
+        { path: 'empReport',name: 'empReport',component: EmpReportView },
+        { path: 'stuReport',name: 'stuReport',component: StuReportView },
+      ]
+    },
+    { path: '/login',name: 'login',component: LoginView }
 
   ]
 
