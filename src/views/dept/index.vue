@@ -2,24 +2,17 @@
 
 import { id } from 'element-plus/es/locales.mjs';
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import * as deptApi from '@/api/depts'
+
 onMounted(() => {
   search();
 })
-const depts = ref([
-    {
-        "id": 1,
-        "name": "部门1",
-        "createTime": "2023-01-01 00:00:00",
-        "updateTime": "2023-01-01 00:00:00"
-    }
-])
 
 const deptList = ref([])
 const search = async () => {
-    const result = await axios.get('/depts')
-    if (result.data.code === 1) {
-        deptList.value = result.data.data 
+    const result = await deptApi.getAllDepts()
+    if (result.code === 1) {
+        deptList.value = result.data 
     }
 }
 
