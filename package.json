@@ -10,7 +10,6 @@
     "@element-plus/icons-vue": "^2.3.2",
     "axios": "^1.13.2",
     "element-plus": "^2.4.4",
-    "mockjs": "^1.1.0",
     "vue": "^3.2.38",
     "vue-router": "^4.6.3"
   },
