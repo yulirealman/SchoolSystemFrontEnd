@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import { id } from 'element-plus/es/locales.mjs';
+import { de, id } from 'element-plus/es/locales.mjs';
 import {reactive, ref, onMounted } from 'vue';
 import * as deptApi from '@/api/depts'
 import {ElMessage} from 'element-plus'
@@ -25,28 +25,51 @@ const dept = ref({
 const formTitle = ref('')
 
 const addDept = () => {
-    dialogFormVisible.value = true
-    formTitle.value = '新增部门'
+    dept.value = { name: '' };
+    dialogFormVisible.value = true;
+    formTitle.value = '新增部门';
+    if (deptFormRef.value) {
+    deptFormRef.value.resetFields();
+    }
 
 }
 const save = async () => { 
 
+  if(!deptFormRef.value) return;
 
-  const result = await deptApi.addApi(dept.value)
-  if (result.code === 1) {
-    ElMessage.success('保存成功')
-    
+  deptFormRef.value.validate(async (valid)=>{
+    if(valid){
+      const result = await deptApi.addApi(dept.value)
+      if (result.code === 1) {
+        ElMessage.success('保存成功')
+        
 
-    dialogFormVisible.value = false;
-    search();
-  } else {
-    ElMessage.error("保存失败：" + result.msg);
+        dialogFormVisible.value = false;
+        search();
+      } else {
+        ElMessage.error("保存失败：" + result.msg);
 
-  }
+      }
+    }else{
+        ElMessage.error("表单验证失败，请检查输入项");
+    }
+  });
+  
+
+
 
 }
 
 
+//verify 
+const rules = ref({
+  name: [
+    { required: true, message: '请输入部门名称', trigger: 'blur' },
+    { min: 2, max: 10, message: '长度至少 2 个字符，最多 10 个字符', trigger: 'blur' }
+  ]
+});
+
+const  deptFormRef = ref();
 </script>
 
 <template>
@@ -69,9 +92,9 @@ const save = async () => {
 
 
     <el-dialog v-model="dialogFormVisible" :title="formTitle" width="500">
-    <el-form :model="dept">
-      <el-form-item label="部门名称" :label-width="formLabelWidth">
-        <el-input v-model="dept.name"/>
+    <el-form :model="dept" :rules="rules" ref="deptFormRef">
+      <el-form-item label="部门名称" :label-width="formLabelWidth" prop="name">
+        <el-input v-model="dept.name" placeholder="请输入部门名称" />
       </el-form-item>
 
     </el-form>
