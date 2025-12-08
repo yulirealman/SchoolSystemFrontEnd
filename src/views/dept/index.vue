@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 
-import { id } from 'element-plus/es/locales.mjs';
 import { ref, onMounted } from 'vue';
 import * as deptApi from '@/api/depts'
 
