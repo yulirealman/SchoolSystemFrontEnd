@@ -2,7 +2,7 @@
 
 import { ref, onMounted } from 'vue';
 import * as deptApi from '@/api/depts'
-import {ElMessage} from 'element-plus'
+import {ElMessage,ElMessageBox} from 'element-plus'
 onMounted(() => {
   search();
 })
@@ -94,6 +94,25 @@ const  deptFormRef = ref();
   }
 
 }
+const deleteById = async (id) => { 
+  ElMessageBox.confirm('确定要删除该部门吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(async () => {// 确认删除
+    const result = await deptApi.deleteByIdApi(id);
+    if (result.code === 1) {
+      ElMessage.success('删除成功');
+      search();
+    } else {
+      ElMessage.error('删除失败：' + result.msg);
+    }
+  }).catch(() => {
+    // 取消删除
+    ElMessage.info('已取消删除');
+  });
+
+}
 </script>
 
 <template>
@@ -110,7 +129,7 @@ const  deptFormRef = ref();
       <template #default="scope">
         
         <el-button type="primary" size="small" @click="editDept(scope.row.id)"> <el-icon><EditPen    /></el-icon> 编辑</el-button>
-        <el-button type="danger" size="small"> <el-icon><Delete /></el-icon> 删除</el-button>
+        <el-button type="danger" size="small" @click="deleteById(scope.row.id)"> <el-icon><Delete /></el-icon> 删除</el-button>
       </template>
     </el-table-column>
   </el-table>

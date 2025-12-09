@@ -17,3 +17,7 @@ export const queryByIdApi = (id) => {
 export const updateApi = (dept) => {
     return request.put('/depts',dept)
 }
+
+export const deleteByIdApi = (id) => {
+    return request.delete(`/depts?id=${id}`)
+}
