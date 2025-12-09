@@ -70,6 +70,22 @@ const rules = ref({
 });
 
 const  deptFormRef = ref();
+
+
+  const editDept = async (id) => { 
+
+  formTitle.value = '编辑部门';
+  if (deptFormRef.value) {
+    deptFormRef.value.resetFields();
+  }
+  const result = await deptApi.queryByIdApi(id);
+
+  if (result.code === 1) {
+    dept.value = result.data;
+    dialogFormVisible.value = true;
+  }
+
+}
 </script>
 
 <template>
@@ -84,7 +100,7 @@ const  deptFormRef = ref();
     <el-table-column prop="updateTime" label="最后操作时间" width="300" align="center" />
     <el-table-column label="操作" align="center" > 
       <template #default="scope">
-        <el-button type="primary" size="small"> <el-icon><EditPen    /></el-icon> 编辑</el-button>
+        <el-button type="primary" size="small" @click="editDept(scope.row.id)"> <el-icon><EditPen    /></el-icon> 编辑</el-button>
         <el-button type="danger" size="small"> <el-icon><Delete /></el-icon> 删除</el-button>
       </template>
     </el-table-column>

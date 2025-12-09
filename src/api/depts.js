@@ -8,3 +8,7 @@ export async function queryAllApi(){
 export async function addApi(dept){
     return request.post('/depts',dept)
 } 
+
+export async function queryByIdApi(id){
+    return request.get(`/depts/${id}`)
+}
