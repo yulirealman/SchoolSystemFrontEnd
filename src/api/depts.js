@@ -1,14 +1,19 @@
 import request from '@/utils/request'
 
-export async function queryAllApi(){
+export const queryAllApi = () => {
     return request.get('/depts')
 }
 
 
-export async function addApi(dept){
+export const addApi = (dept) => {
     return request.post('/depts',dept)
 } 
 
-export async function queryByIdApi(id){
+
+export const queryByIdApi = (id) => {
     return request.get(`/depts/${id}`)
+}
+
+export const updateApi = (dept) => {
+    return request.put('/depts',dept)
 }

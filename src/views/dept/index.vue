@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 
-import { de, id } from 'element-plus/es/locales.mjs';
-import {reactive, ref, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import * as deptApi from '@/api/depts'
 import {ElMessage} from 'element-plus'
 onMounted(() => {
@@ -38,8 +37,17 @@ const save = async () => {
   if(!deptFormRef.value) return;
 
   deptFormRef.value.validate(async (valid)=>{
+
     if(valid){
-      const result = await deptApi.addApi(dept.value)
+
+
+      let result;
+      if(dept.value.id){
+        result = await deptApi.updateApi(dept.value);
+      }else{
+        result = await deptApi.addApi(dept.value);
+      }
+
       if (result.code === 1) {
         ElMessage.success('保存成功')
         
@@ -100,6 +108,7 @@ const  deptFormRef = ref();
     <el-table-column prop="updateTime" label="最后操作时间" width="300" align="center" />
     <el-table-column label="操作" align="center" > 
       <template #default="scope">
+        
         <el-button type="primary" size="small" @click="editDept(scope.row.id)"> <el-icon><EditPen    /></el-icon> 编辑</el-button>
         <el-button type="danger" size="small"> <el-icon><Delete /></el-icon> 删除</el-button>
       </template>
@@ -108,6 +117,7 @@ const  deptFormRef = ref();
 
 
     <el-dialog v-model="dialogFormVisible" :title="formTitle" width="500">
+          <!-- {{dept}} -->
     <el-form :model="dept" :rules="rules" ref="deptFormRef">
       <el-form-item label="部门名称" :label-width="formLabelWidth" prop="name">
         <el-input v-model="dept.name" placeholder="请输入部门名称" />
