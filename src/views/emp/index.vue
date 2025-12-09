@@ -1,17 +1,30 @@
 <script setup>
-    import { ref } from 'vue';
+    import { ref,watch } from 'vue';
 
     
-    const searchEmp = ref({ name: '', gender: '', date:[]});
+    const searchEmp = ref({ name: '', gender: '', date:[],begin:'',end:'' });
+
+    watch(() => searchEmp.value.date, (newVal,oldVal) => {
+         if(newVal.length==2){
+            searchEmp.value.begin = newVal[0];
+            searchEmp.value.end = newVal[1];
+        }else{
+            searchEmp.value.begin = '';
+            searchEmp.value.end = '';
+        }
+        
+    }, { deep: true });
 
     const search = () => {
         console.log(searchEmp.value);
     }
 
     const clear = () => {
-        searchEmp.value = { name: '', gender: '', date:[]};
+        searchEmp.value = { name: '', gender: '', date:[],begin:'',end:'' };
         search();
     }
+
+
 </script>
 
 <template>
@@ -20,7 +33,7 @@
     <div class="container"> 
         <el-form :inline="true" :model="searchEmp" class="demo-form-inline">
             <el-form-item label="姓名">
-                <el-input v-model="searchEmp.name" placeholder="请输入员工姓名" clearable/>
+                <el-input v-model="searchEmp.name" placeholder="请输入员工姓名" />
             </el-form-item>
              
             <el-form-item label="性别">
