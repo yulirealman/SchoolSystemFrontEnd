@@ -41,12 +41,14 @@
     const background  = ref(true);
     const total = ref(0);
     const handleSizeChange = (size) => {
+        pageSize.value = size;
         search();
     };
     const handleCurrentChange = (page) => {
+        currentPage.value = page;
         search();
     };
-</script>
+</script> 
 
 <template>
     <!-- h1 -->
