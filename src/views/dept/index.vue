@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 
 import { ref, onMounted } from 'vue';
-import * as deptApi from '@/api/depts'
+import { queryAllApi, queryByIdApi, addApi, updateApi, deleteByIdApi } from '@/api/depts';
 import {ElMessage,ElMessageBox} from 'element-plus'
+
 onMounted(() => {
   search();
 })
 
 const deptList = ref([])
 const search = async () => {
-    const result = await deptApi.queryAllApi()
+    const result = await queryAllApi()
     if (result.code === 1) {
         deptList.value = result.data 
     }
@@ -43,9 +44,9 @@ const save = async () => {
 
       let result;
       if(dept.value.id){
-        result = await deptApi.updateApi(dept.value);
+        result = await updateApi(dept.value);
       }else{
-        result = await deptApi.addApi(dept.value);
+        result = await addApi(dept.value);
       }
 
       if (result.code === 1) {
@@ -86,7 +87,7 @@ const  deptFormRef = ref();
   if (deptFormRef.value) {
     deptFormRef.value.resetFields();
   }
-  const result = await deptApi.queryByIdApi(id);
+  const result = await queryByIdApi(id);
 
   if (result.code === 1) {
     dept.value = result.data;
@@ -100,7 +101,7 @@ const deleteById = async (id) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(async () => {// 确认删除
-    const result = await deptApi.deleteByIdApi(id);
+    const result = await deleteByIdApi(id);
     if (result.code === 1) {
       ElMessage.success('删除成功');
       search();
