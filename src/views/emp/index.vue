@@ -1,6 +1,6 @@
 <script setup>
-    import { ref,watch } from 'vue';
-
+    import { ref,watch, onMounted } from 'vue';
+    import {queryPageApi} from '@/api/emp';
     
     const searchEmp = ref({ name: '', gender: '', date:[],begin:'',end:'' });
 
@@ -15,8 +15,16 @@
         
     }, { deep: true });
 
-    const search = () => {
-        console.log(searchEmp.value);
+    onMounted(() => {
+        search();
+    })
+
+    const search = async () => {
+        const result = await queryPageApi(searchEmp.value.name, searchEmp.value.gender, searchEmp.value.begin, searchEmp.value.end, currentPage.value, pageSize.value)
+        if(result.code === 1){
+            empList.value = result.data.rows ;
+            total.value = result.data.total;
+        }
     }
 
     const clear = () => {
@@ -25,11 +33,26 @@
     }
 
 
+    const empList = ref([{
+    }]);
+
+    const currentPage = ref(1);    
+    const pageSize = ref(10);
+    const background  = ref(true);
+    const total = ref(0);
+    const handleSizeChange = (size) => {
+        search();
+    };
+    const handleCurrentChange = (page) => {
+        search();
+    };
 </script>
 
 <template>
     <!-- h1 -->
     <h1>员工管理</h1>
+    
+
     <div class="container"> 
         <el-form :inline="true" :model="searchEmp" class="demo-form-inline">
             <el-form-item label="姓名">
@@ -62,10 +85,70 @@
         </el-form>
     </div>
 
+
+    <div class="container">
+        <el-button type="primary" @click="">+ 新增员工</el-button>
+        <el-button type="danger" @click="">- 批量删除</el-button>
+
+    </div>
+
+    <div class="container">
+        <el-table :data="empList" border style="width: 100%" >
+            <el-table-column type="selection" width="55" align="center" />
+            <el-table-column prop="name" label="姓名" width="120" align="center" />
+            <el-table-column label="性别" width="120" align="center">
+                <template #default="scope">
+                    {{ scope.row.gender == 1 ? '男' : '女' }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="image" label="头像" width="120" align="center">
+                <template #default="scope">
+                    <img :src="scope.row.image" height="40px" />
+                </template>
+            </el-table-column>
+            <el-table-column prop="deptName" label="所属部门" width="120" align="center" /> 
+            <el-table-column prop="job" label="职位" width="120" align="center">
+                <template #default="scope">
+                    <span v-if="scope.row.job == 1">班主任</span>
+                    <span v-else-if="scope.row.job == 2">讲师</span>
+                    <span v-else-if="scope.row.job == 3">学工主管</span>
+                    <span v-else-if="scope.row.job == 4">教研主管</span>
+                    <span v-else-if="scope.row.job == 5">咨询师</span> 
+                    <span v-else>其他</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="entryDate" label="入职日期" width="180" align="center" />    
+            <el-table-column prop="updateTime" label="最后操作时间" width="200" align="center" />
+            <el-table-column label="操作" align="center" >
+                <template #default="scope">
+                    <el-button type="primary" size="small" @click="" >编辑</el-button>
+                    <el-button type="danger" size="small" @click="">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+            
+
+
+    </div>
+
+    <div class="container">
+        <el-pagination
+            v-model:current-page="currentPage"
+            v-model:page-size="pageSize"
+            :page-sizes="[5,10 , 20, 30, 50, 75 , 100]"
+            :background="background"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+        />
+    </div>
+
+
 </template>
 
 <style scoped>
     .container{
-        margin: 15px 0px;
+        margin: 10px 0px;
     }
 </style>

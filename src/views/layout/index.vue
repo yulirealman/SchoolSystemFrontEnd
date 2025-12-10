@@ -26,7 +26,7 @@ import { Avatar, Document, HelpFilled, Histogram, HomeFilled, InfoFilled, Menu, 
       <el-container>
         <el-aside width="200px" class="aside">      
           <el-scrollbar>
-            <el-menu router="true">
+            <el-menu :router="true">
 
 
                 <el-menu-item index="/index">
