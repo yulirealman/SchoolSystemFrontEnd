@@ -3,8 +3,8 @@
 // 导入依赖
 // ---------------------------
 import { ref, watch, onMounted } from 'vue';
-import { queryPageApi, addEmpApi, updateEmpApi,getEmpByIdApi} from '@/api/emps';
-import { ElMessage } from 'element-plus';
+import { queryPageApi, addEmpApi, updateEmpApi,getEmpByIdApi,deleteEmpByIdApi } from '@/api/emps';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 
 
@@ -258,6 +258,41 @@ const restoreExprList = (list) => {
   }));
 };
 
+const deleteEmp = async (row) => {
+  ElMessageBox.confirm(
+    '确定要删除员工 ' + row.name + ' 吗？',
+    '警告',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(async () => {
+        const result = await deleteEmpByIdApi([row.id]);
+      if (result.code === 1) {
+        ElMessage.success('删除成功');
+        search();
+      } else {
+        ElMessage.error("删除失败：" + result.msg);
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '删除取消',
+      })
+    })
+
+
+    // const result = await deleteEmpByIdApi([row.id]);
+    // if (result.code === 1) {
+    //     ElMessage.success('删除成功');
+    //     search();
+    // } else {
+    //     ElMessage.error("删除失败：" + result.msg);
+    // }
+};
 
 </script>
 
@@ -327,8 +362,9 @@ const restoreExprList = (list) => {
             <el-table-column prop="updateTime" label="最后操作时间" width="200" align="center" />
             <el-table-column label="操作" align="center">
                 <template #default="scope">
+                    <!-- 之所以scope能看到所有attribute 是因为在调用search（）时已经把数据全部取回来了 -->
                     <el-button type="primary" size="small" @click="openEdit(scope.row)">编辑</el-button>
-                    <el-button type="danger" size="small" @click="">删除</el-button>
+                    <el-button type="danger" size="small" @click="deleteEmp(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>

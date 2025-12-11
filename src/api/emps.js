@@ -15,3 +15,12 @@ export const updateEmpApi = (emp) => {
 export const getEmpByIdApi = (id) => {
     return request.get(`/emps/${id}`)
 }
+
+export const deleteEmpByIdApi = (ids) => {
+    return request.delete('/emps', {
+        params: {
+            ids: ids.join(',')   // 直接 join
+        }
+    })
+}
+
