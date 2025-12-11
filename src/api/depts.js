@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export const queryAllApi = () => {
+export const queryDeptListApi = () => {
     return request.get('/depts')
 }
 

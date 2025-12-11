@@ -4,7 +4,23 @@
 // ---------------------------
 import { ref, watch, onMounted } from 'vue';
 import { queryPageApi, addEmpApi, updateEmpApi, getEmpByIdApi, deleteEmpByIdApi } from '@/api/emps';
+import { queryDeptListApi } from '@/api/depts';
 import { ElMessage, ElMessageBox } from 'element-plus';
+
+const jobs = ref([
+    { name: "班主任", value: 1 },
+    { name: "讲师", value: 2 },
+    { name: "学工主管", value: 3 },
+    { name: "教研主管", value: 4 },
+    { name: "咨询师", value: 5 },
+    { name: "其他", value: 6 },
+]);
+
+
+const genders = ref([
+    { name: '男', value: 1 },
+    { name: '女', value: 2 }
+]);
 
 
 
@@ -30,6 +46,7 @@ watch(() => searchEmp.value.date, (newVal) => {
 // ---------------------------
 onMounted(() => {
     search();
+    queryDeptList();
 });
 
 
@@ -87,14 +104,14 @@ const dialogFormRef = ref();
 // ---------------------------
 // 表单数据 & 部门列表
 // ---------------------------
-const deptList = [
-    { id: 1, name: "教研部" },
-    { id: 2, name: "咨询部" },
-    { id: 3, name: "行政部" },
-    { id: 4, name: "学工部" },
-    { id: 5, name: "就业部" },
-    { id: 6, name: "人事部" }
-];
+const depts = ref([]);
+
+const queryDeptList = async () => {
+    const result = await queryDeptListApi();
+    if (result.code === 1) {
+        depts.value = result.data;
+    }
+}
 
 // 员工表单
 const empForm = ref({
@@ -317,8 +334,7 @@ let handleSelectionChange = (selection) => {
 
             <el-form-item label="性别">
                 <el-select v-model="searchEmp.gender" placeholder="请选择性别" clearable>
-                    <el-option label=" 男" value="1" />
-                    <el-option label="女" value="2" />
+                    <el-option v-for="item in genders" :key="item.value" :label="item.name" :value="item.value" />
                 </el-select>
             </el-form-item>
             <el-form-item label="入职时间">
@@ -357,16 +373,15 @@ let handleSelectionChange = (selection) => {
                 </template>
             </el-table-column>
             <el-table-column prop="deptName" label="所属部门" width="120" align="center" />
+
             <el-table-column prop="job" label="职位" width="120" align="center">
-                <template #default="scope">
-                    <span v-if="scope.row.job == 1">班主任</span>
-                    <span v-else-if="scope.row.job == 2">讲师</span>
-                    <span v-else-if="scope.row.job == 3">学工主管</span>
-                    <span v-else-if="scope.row.job == 4">教研主管</span>
-                    <span v-else-if="scope.row.job == 5">咨询师</span>
-                    <span v-else>其他</span>
+                <template #default="{ row }">
+                    <span>
+                        {{jobs.find(job => job.value === row.job)?.name || '其他'}}
+                    </span>
                 </template>
             </el-table-column>
+
             <el-table-column prop="entryDate" label="入职日期" width="180" align="center" />
             <el-table-column prop="updateTime" label="最后操作时间" width="200" align="center" />
             <el-table-column label="操作" align="center">
@@ -430,12 +445,7 @@ let handleSelectionChange = (selection) => {
                     <el-col :span="12">
                         <el-form-item label="职位" prop="job">
                             <el-select v-model="empForm.job" placeholder="请选择职位">
-                                <el-option label="班主任" :value="1" />
-                                <el-option label="讲师" :value="2" />
-                                <el-option label="学工主管" :value="3" />
-                                <el-option label="教研主管" :value="4" />
-                                <el-option label="咨询师" :value="5" />
-                                <el-option label="其他" :value="6" />
+                                <el-option v-for="job in jobs" :key="job.value" :label="job.name" :value="job.value" />
 
                             </el-select>
                         </el-form-item>
@@ -452,7 +462,7 @@ let handleSelectionChange = (selection) => {
                     <el-col :span="12">
                         <el-form-item label="所属部门" prop="deptId">
                             <el-select v-model="empForm.deptId" placeholder="请选择部门">
-                                <el-option v-for="d in deptList" :key="d.id" :label="d.name" :value="d.id" />
+                                <el-option v-for="d in depts" :key="d.id" :label="d.name" :value="d.id" />
                             </el-select>
 
                         </el-form-item>
@@ -478,50 +488,56 @@ let handleSelectionChange = (selection) => {
                 </el-form-item>
 
                 <!-- 工作经历 -->
-                <div style="display: flex; align-items: center; margin: 10px 40px;">
-                    <span style="margin-right: 10px;">工作经历</span>
-                    <el-button type="success" @click="addExpr" size="small">
-                        + 添加工作经历
-                    </el-button>
-                </div>
+                <el-row :gutter="10">
 
-                <div style="margin-left: 40px;">
-                    <div v-for="(item, index) in empForm.exprList" :key="index" class="expr-item">
-                        <el-row :gutter="10" class="expr-row" size="small">
+                    <el-col :span="24">
+                        <el-form-item label="工作经历" prop="exprList">
+                            <el-button type="success" @click="addExpr" size="small">
+                                + 添加工作经历
+                            </el-button>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
 
-                            <!-- 时间 -->
-                            <el-col :span="12">
-                                <el-form-item label="时间" label-width="40px" size="small">
-                                    <el-date-picker v-model="item.date" type="daterange" value-format="YYYY-MM-DD"
-                                        range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
-                                        size="small" />
-                                </el-form-item>
-                            </el-col>
 
-                            <!-- 公司 -->
-                            <el-col :span="5">
-                                <el-form-item label="公司" label-width="40px" size="small">
-                                    <el-input v-model="item.company" size="small" />
-                                </el-form-item>
-                            </el-col>
 
-                            <!-- 职位 -->
-                            <el-col :span="5">
-                                <el-form-item label="职位" label-width="40px" size="small">
-                                    <el-input v-model="item.job" size="small" />
-                                </el-form-item>
-                            </el-col>
+                <div v-for="(item, index) in empForm.exprList" :key="index" class="expr-item">
+                    <el-row :gutter="3">
 
-                            <!-- 删除按钮 -->
-                            <el-col :span="2" class="flex items-center">
+                        <!-- 时间 -->
+                        <el-col :span="10">
+                            <el-form-item label="时间" label-width="80px" size="small">
+                                <el-date-picker v-model="item.date" type="daterange" value-format="YYYY-MM-DD"
+                                    range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="small" />
+                            </el-form-item>
+                        </el-col>
+
+                        <!-- 公司 -->
+                        <el-col :span="6">
+                            <el-form-item label="公司" label-width="60px" size="small">
+                                <el-input v-model="item.company" size="small" />
+                            </el-form-item>
+                        </el-col>
+
+                        <!-- 职位 -->
+                        <el-col :span="6">
+                            <el-form-item label="职位" label-width="60px" size="small">
+                                <el-input v-model="item.job" size="small" />
+                            </el-form-item>
+                        </el-col>
+
+                        <!-- 删除按钮 -->
+                        <el-col :span="2">
+                            <el-form-item label-width="0px" size="small">
                                 <el-button type="danger" size="small" @click="removeExpr(index)">
-                                    删除
+                                    -删除
                                 </el-button>
-                            </el-col>
+                            </el-form-item>
+                        </el-col>
 
-                        </el-row>
-                    </div>
+                    </el-row>
                 </div>
+
 
 
 

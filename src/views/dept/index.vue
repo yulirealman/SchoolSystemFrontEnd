@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import { ref, onMounted } from 'vue';
-import { queryAllApi, queryByIdApi, addApi, updateApi, deleteByIdApi } from '@/api/depts';
+import { queryDeptListApi, queryByIdApi, addApi, updateApi, deleteByIdApi } from '@/api/depts';
 import {ElMessage,ElMessageBox} from 'element-plus'
 
 onMounted(() => {
@@ -10,7 +10,7 @@ onMounted(() => {
 
 const deptList = ref([])
 const search = async () => {
-    const result = await queryAllApi()
+    const result = await queryDeptListApi()
     if (result.code === 1) {
         deptList.value = result.data 
     }
