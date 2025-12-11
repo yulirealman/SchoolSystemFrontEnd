@@ -1,0 +1,54 @@
+{
+  "common": {
+    "hello": "こんにちは",
+    "welcome": "学校システムへようこそ",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "changePassword": "パスワードを変更",
+    "language": "言語",
+    "home": "ホーム"
+  },
+  "menu": {
+    "manage": {
+      "title": "クラス・生徒管理",
+      "clazz": "クラス管理",
+      "stu": "生徒管理"
+    },
+    "system": {
+      "title": "システム情報管理",
+      "dept": "部門管理",
+      "emp": "従業員管理"
+    },
+    "report": {
+      "title": "データ統計管理",
+      "empReport": "従業員情報統計",
+      "stuReport": "学院情報統計",
+      "log": "ログ情報統計"
+    }
+  },
+  "dept": {
+    "title": "部門管理",
+    "add": "追加",
+    "index": "番号",
+    "departmentName": "部門名",
+    "lastUpdateTime": "最終更新日時",
+    "operation": "操作",
+    "edit": "編集",
+    "delete": "削除",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "saveSuccess": "保存しました",
+    "saveFail": "保存に失敗しました。",
+    "formValidateFail": "フォームの検証に失敗しました。入力内容を確認してください",
+    "deleteConfirm": "この部門を削除してもよろしいですか？",
+    "deleteSuccess": "削除しました",
+    "deleteFail": "削除に失敗しました。",
+    "deleteCancel": "削除はキャンセルされました",
+    "inputPlaceholder": "部門名を入力してください",
+    "titleAdd": "部門を追加",
+    "titleEdit": "部門を編集",
+    "lengthLimit": "部門名は30文字以下で入力してください",
+    "name": "部門名",
+    "prompt": "警告"
+  }
+}

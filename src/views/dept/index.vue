@@ -3,6 +3,9 @@
 import { ref, onMounted } from 'vue';
 import { queryDeptListApi, queryByIdApi, addApi, updateApi, deleteByIdApi } from '@/api/depts';
 import {ElMessage,ElMessageBox} from 'element-plus'
+import { EditPen, Delete } from '@element-plus/icons-vue'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 onMounted(() => {
   search();
@@ -27,7 +30,7 @@ const formTitle = ref('')
 const addDept = () => {
     dept.value = { name: '' };
     dialogFormVisible.value = true;
-    formTitle.value = '新增部门';
+    formTitle.value = t('dept.add');
     if (deptFormRef.value) {
     deptFormRef.value.resetFields();
     }
@@ -50,17 +53,18 @@ const save = async () => {
       }
 
       if (result.code === 1) {
-        ElMessage.success('保存成功')
+        
+        ElMessage.success(t('dept.saveSuccess'))
         
 
         dialogFormVisible.value = false;
         search();
       } else {
-        ElMessage.error("保存失败：" + result.msg);
+        ElMessage.error(t('dept.saveFail') + result.msg);
 
       }
     }else{
-        ElMessage.error("表单验证失败，请检查输入项");
+        ElMessage.error(t('dept.formValidateFail'));
     }
   });
   
@@ -71,19 +75,35 @@ const save = async () => {
 
 
 //verify 
-const rules = ref({
+// const rules = ref({
+//   name: [
+//     { required: true, message: t('dept.inputPlaceholder'), trigger: 'blur' },
+//     { min: 2, max: 30, message: t('dept.lengthLimit'), trigger: 'blur' }
+//   ]
+// });
+const rules = {
   name: [
-    { required: true, message: '请输入部门名称', trigger: 'blur' },
-    { min: 2, max: 10, message: '长度至少 2 个字符，最多 10 个字符', trigger: 'blur' }
+    { 
+      required: true, 
+      message: () => t('dept.inputPlaceholder'), 
+      trigger: 'blur' 
+    },
+    { 
+      min: 2, 
+      max: 30, 
+      message: () => t('dept.lengthLimit'), 
+      trigger: 'blur' 
+    }
   ]
-});
+}
+
 
 const  deptFormRef = ref();
 
 
   const editDept = async (id) => { 
 
-  formTitle.value = '编辑部门';
+  formTitle.value = t('dept.edit');
   if (deptFormRef.value) {
     deptFormRef.value.resetFields();
   }
@@ -95,42 +115,44 @@ const  deptFormRef = ref();
   }
 
 }
+
+
 const deleteById = async (id) => { 
-  ElMessageBox.confirm('确定要删除该部门吗？', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
+  ElMessageBox.confirm(t('dept.deleteConfirm'), t('dept.prompt'), {
+    confirmButtonText: t('dept.confirm'),
+    cancelButtonText: t('dept.cancel'),
     type: 'warning',
   }).then(async () => {// 确认删除
     const result = await deleteByIdApi(id);
     if (result.code === 1) {
-      ElMessage.success('删除成功');
+      ElMessage.success(t('dept.deleteSuccess'));
       search();
     } else {
-      ElMessage.error('删除失败：' + result.msg);
+      ElMessage.error(t('dept.deleteFail') + result.msg);
     }
   }).catch(() => {
     // 取消删除
-    ElMessage.info('已取消删除');
+    ElMessage.info(t('dept.deleteCancel'));
   });
 
 }
 </script>
 
 <template>
-    <h1>部门管理</h1>
+    <h1>{{ t('dept.title') }}</h1>
     <div class="container">
-        <el-button type="primary" @click="addDept">+新增部门</el-button>
+        <el-button type="primary" @click="addDept">+{{ t('dept.add') }}</el-button>
     </div>
 
   <el-table :data="deptList" border style="width: 100%" >
-    <el-table-column type="index" label="序号" width="100" align="center" />
-    <el-table-column prop="name" label="部门名称" width="260" align="center" />
-    <el-table-column prop="updateTime" label="最后操作时间" width="300" align="center" />
-    <el-table-column label="操作" align="center" > 
+    <el-table-column type="index" :label="t('dept.index')" width="100" align="center" />
+    <el-table-column prop="name" :label="t('dept.departmentName')" width="260" align="center" />
+    <el-table-column prop="updateTime" :label="t('dept.lastUpdateTime')" width="300" align="center" />
+    <el-table-column :label="t('dept.operation')" align="center" > 
       <template #default="scope">
         
-        <el-button type="primary" size="small" @click="editDept(scope.row.id)"> <el-icon><EditPen    /></el-icon> 编辑</el-button>
-        <el-button type="danger" size="small" @click="deleteById(scope.row.id)"> <el-icon><Delete /></el-icon> 删除</el-button>
+        <el-button type="primary" size="small" @click="editDept(scope.row.id)"> <el-icon><EditPen    /></el-icon> {{ t('dept.edit') }}</el-button>
+        <el-button type="danger" size="small" @click="deleteById(scope.row.id)"> <el-icon><Delete /></el-icon> {{ t('dept.delete') }}</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -139,15 +161,15 @@ const deleteById = async (id) => {
     <el-dialog v-model="dialogFormVisible" :title="formTitle" width="500">
           <!-- {{dept}} -->
     <el-form :model="dept" :rules="rules" ref="deptFormRef">
-      <el-form-item label="部门名称" :label-width="formLabelWidth" prop="name">
-        <el-input v-model="dept.name" placeholder="请输入部门名称" />
+      <el-form-item :label="t('dept.name')" :label-width="formLabelWidth" prop="name">
+        <el-input v-model="dept.name" :placeholder="t('dept.inputPlaceholder')" />
       </el-form-item>
 
     </el-form>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="save">确认</el-button>
+        <el-button @click="dialogFormVisible = false">{{ t('dept.cancel') }}</el-button>
+        <el-button type="primary" @click="save">{{ t('dept.confirm') }}</el-button>
       </div>
     </template>
   </el-dialog>

@@ -1,0 +1,55 @@
+{
+  "common": {
+    "hello": "你好",
+    "welcome": "欢迎来到学校系统",
+    "login": "登录",
+    "logout": "退出登录",
+    "changePassword": "修改密码",
+    "language": "语言",
+    "home": "首页"
+  },
+  "menu": {
+    "manage": {
+      "title": "班级学员管理",
+      "clazz": "班级管理",
+      "stu": "学员管理"
+    },
+    "system": {
+      "title": "系统信息管理",
+      "dept": "部门管理",
+      "emp": "员工管理"
+    },
+    "report": {
+      "title": "数据统计管理",
+      "empReport": "员工信息统计",
+      "stuReport": "学院信息统计",
+      "log": "日志信息统计"
+    }
+  },
+  "dept":{
+    "title": "部门管理",
+    "add": "新增",
+    "index": "序号",
+    "departmentName": "部门名称",
+    "lastUpdateTime": "最后操作时间",
+    "operation": "操作",
+    "edit": "编辑",
+    "delete": "删除",
+    "cancel": "取消",
+    "confirm": "确认",
+    "saveSuccess": "保存成功",
+    "saveFail": "保存失败：",
+    "formValidateFail": "表单验证失败，请检查输入项",
+    "deleteConfirm": "确定要删除该部门吗？",
+    "deleteSuccess": "删除成功",
+    "deleteFail": "删除失败：",
+    "deleteCancel": "已取消删除",
+    "inputPlaceholder": "请输入部门名称",
+    "titleAdd": "新增部门",
+    "titleEdit": "编辑部门",
+    "lengthLimit": "部门名称长度不能超过30个字符",
+    "name": "部门名称",
+    "prompt": "提示"
+  }
+
+}

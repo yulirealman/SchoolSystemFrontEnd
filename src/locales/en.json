@@ -1,0 +1,55 @@
+{
+  "common": {
+    "hello": "Hello",
+    "welcome": "Welcome to the School System",
+    "login": "Login",
+    "logout": "Logout",
+    "changePassword": "Change Password",
+    "language": "Language",
+    "home": "Home"
+  },
+  "menu": {
+    "manage": {
+      "title": "Class & Student",
+      "clazz": "Class",
+      "stu": "Student"
+    },
+    "system": {
+      "title": "System Info",
+      "dept": "Department",
+      "emp": "Employee"
+    },
+    "report": {
+      "title": "Data Statistics",
+      "empReport": "Employee Info",
+      "stuReport": "Student Info",
+      "log": "Log Info"
+    }
+  },
+  "dept":{
+    "title": "Department Management",
+    "add": "Add",
+    "index": "No.",
+    "departmentName": "Department Name",
+    "lastUpdateTime": "Last Updated",
+    "operation": "Operation",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "saveSuccess": "Saved successfully",
+    "saveFail": "Save failed: ",
+    "formValidateFail": "Form validation failed, please check input",
+    "deleteConfirm": "Are you sure to delete this department?",
+    "deleteSuccess": "Deleted successfully",
+    "deleteFail": "Delete failed: ",
+    "deleteCancel": "Delete cancelled",
+    "inputPlaceholder": "Please enter department name",
+    "titleAdd": "Add Department",
+    "titleEdit": "Edit Department",
+    "lengthLimit": "Department name length must be less than 30 characters",
+    "name": "Department Name",
+    "prompt": "Warning"
+  
+  }
+}
