@@ -3,7 +3,7 @@
 // 导入依赖
 // ---------------------------
 import { ref, watch, onMounted } from 'vue';
-import { queryPageApi, addEmpApi, updateEmpApi,getEmpByIdApi,deleteEmpByIdApi } from '@/api/emps';
+import { queryPageApi, addEmpApi, updateEmpApi, getEmpByIdApi, deleteEmpByIdApi } from '@/api/emps';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 
@@ -201,7 +201,8 @@ const addExpr = () => {
 };
 
 const removeExpr = (index) => {
-    // 用户要求不改功能 → 保持原样
+
+    empForm.value.exprList.splice(index, 1);
 };
 
 
@@ -244,54 +245,61 @@ const submit = async () => {
 
 
 const normalizeExprList = (list) => {
-  return list.map(item => ({
-    ...item,
-    begin: item.date?.[0] || '',
-    end: item.date?.[1] || '',
-  }));
+    return list.map(item => ({
+        ...item,
+        begin: item.date?.[0] || '',
+        end: item.date?.[1] || '',
+    }));
 };
 
 const restoreExprList = (list) => {
-  return list.map(item => ({
-    ...item,
-    date: [item.begin, item.end],
-  }));
+    return list.map(item => ({
+        ...item,
+        date: [item.begin, item.end],
+    }));
 };
 
 const deleteEmp = async (row) => {
-  ElMessageBox.confirm(
-    '确定要删除员工 ' + row.name + ' 吗？',
-    '警告',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  )
-    .then(async () => {
-        const result = await deleteEmpByIdApi([row.id]);
-      if (result.code === 1) {
-        ElMessage.success('删除成功');
-        search();
-      } else {
-        ElMessage.error("删除失败：" + result.msg);
-      }
+    console.log("传进来的 row =", row);
+    // 先算要显示的 message
+    const message = Array.isArray(row)
+        ? `确定要删除选中的 ${row.length} 名员工吗？`
+        : `确定要删除员工 ${row.name} 吗？`
+
+    ElMessageBox.confirm(message, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
     })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '删除取消',
-      })
-    })
+        .then(async () => {
+            // 如果是数组（批量删除）
+            const ids = Array.isArray(row)
+                ? row.map(r => r.id)
+                : [row.id]
+
+            const result = await deleteEmpByIdApi(ids);
+
+            if (result.code === 1) {
+                ElMessage.success('删除成功');
+                search();
+            } else {
+                ElMessage.error("删除失败：" + result.msg);
+            }
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: '删除取消',
+            })
+        })
+};
 
 
-    // const result = await deleteEmpByIdApi([row.id]);
-    // if (result.code === 1) {
-    //     ElMessage.success('删除成功');
-    //     search();
-    // } else {
-    //     ElMessage.error("删除失败：" + result.msg);
-    // }
+
+const selectedEmps = ref([]);
+let handleSelectionChange = (selection) => {
+    selectedEmps.value = selection;
+    console.log(selectedEmps.value);
 };
 
 </script>
@@ -328,13 +336,14 @@ const deleteEmp = async (row) => {
     <!-- 新增刪除按鍵 -->
     <div class="container">
         <el-button type="primary" @click="openAdd()">+ 新增员工</el-button>
-        <el-button type="danger" @click="">- 批量删除</el-button>
+        <el-button type="danger" @click="deleteEmp(selectedEmps)">- 批量删除</el-button>
 
     </div>
 
     <!-- 表格 -->
     <div class="container">
-        <el-table :data="empList" border style="width: 100%">
+        <el-table :data="empList" border style="width: 100%" @selection-change="handleSelectionChange">
+
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column prop="name" label="姓名" width="120" align="center" />
             <el-table-column label="性别" width="120" align="center">
@@ -477,17 +486,17 @@ const deleteEmp = async (row) => {
                 </div>
 
                 <div style="margin-left: 40px;">
-                        <div v-for="(item, index) in empForm.exprList" :key="index" class="expr-item">
-                            <el-row :gutter="10" class="expr-row" size="small">
+                    <div v-for="(item, index) in empForm.exprList" :key="index" class="expr-item">
+                        <el-row :gutter="10" class="expr-row" size="small">
 
-                                <!-- 时间 -->
-                                <el-col :span="12">
-                                    <el-form-item label="时间" label-width="40px" size="small">
-                                        <el-date-picker v-model="item.date" type="daterange" value-format="YYYY-MM-DD"
-                                            range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
-                                            size="small" />
-                                    </el-form-item>
-                                </el-col>
+                            <!-- 时间 -->
+                            <el-col :span="12">
+                                <el-form-item label="时间" label-width="40px" size="small">
+                                    <el-date-picker v-model="item.date" type="daterange" value-format="YYYY-MM-DD"
+                                        range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
+                                        size="small" />
+                                </el-form-item>
+                            </el-col>
 
                             <!-- 公司 -->
                             <el-col :span="5">
