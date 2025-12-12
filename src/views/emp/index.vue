@@ -152,9 +152,9 @@ const openAdd = () => {
 
     if (dialogFormRef.value) {
         dialogFormRef.value.resetFields();
-        empForm.value = { exprList: [] };
-    }
 
+    }
+    empForm.value = { exprList: [] };
 
     dialogFormVisible.value = true;
 };
@@ -277,11 +277,38 @@ const restoreExprList = (list) => {
 };
 
 const deleteEmp = async (row) => {
-    console.log("传进来的 row =", row);
     // 先算要显示的 message
-    const message = Array.isArray(row)
-        ? `确定要删除选中的 ${row.length} 名员工吗？`
-        : `确定要删除员工 ${row.name} 吗？`
+    const message = `确定要删除员工 ${row.name} 吗？`
+    console.log(row)
+    ElMessageBox.confirm(message, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+    })
+        .then(async () => {
+            const result = await deleteEmpByIdApi(row.id);
+            if (result.code === 1) {
+                ElMessage.success('删除成功');
+                search();
+            } else {
+                ElMessage.error("删除失败：" + result.msg);
+            }
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: '删除取消',
+            })
+        })
+};
+
+const deleteEmpBatch = async (ids) => { 
+    // 先算要显示的 message
+    if(ids.length === 0) {
+        ElMessage.error("请选择要删除的员工");
+        return;
+    }
+    const message = `确定要删除选中的 ${ids.length} 个员工吗？`
 
     ElMessageBox.confirm(message, '提示', {
         confirmButtonText: '确定',
@@ -289,13 +316,7 @@ const deleteEmp = async (row) => {
         type: 'warning',
     })
         .then(async () => {
-            // 如果是数组（批量删除）
-            const ids = Array.isArray(row)
-                ? row.map(r => r.id)
-                : [row.id]
-
             const result = await deleteEmpByIdApi(ids);
-
             if (result.code === 1) {
                 ElMessage.success('删除成功');
                 search();
@@ -314,17 +335,17 @@ const deleteEmp = async (row) => {
 
 
 const selectedEmps = ref([]);
+
 let handleSelectionChange = (selection) => {
-    selectedEmps.value = selection;
-    console.log(selectedEmps.value);
+  selectedEmps.value = selection.map(item => item.id);
 };
+
 
 </script>
 
 <template>
     <!-- h1 -->
     <h1>员工管理</h1>
-
     <!-- 輸入欄位 -->
     <div class="container">
         <el-form :inline="true" :model="searchEmp" class="demo-form-inline">
@@ -352,7 +373,7 @@ let handleSelectionChange = (selection) => {
     <!-- 新增刪除按鍵 -->
     <div class="container">
         <el-button type="primary" @click="openAdd()">+ 新增员工</el-button>
-        <el-button type="danger" @click="deleteEmp(selectedEmps)">- 批量删除</el-button>
+        <el-button type="danger" @click="deleteEmpBatch(selectedEmps)">- 批量删除</el-button>
 
     </div>
 

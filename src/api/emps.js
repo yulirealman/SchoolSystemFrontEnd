@@ -17,10 +17,6 @@ export const getEmpByIdApi = (id) => {
 }
 
 export const deleteEmpByIdApi = (ids) => {
-    return request.delete('/emps', {
-        params: {
-            ids: ids.join(',')   // 直接 join
-        }
-    })
+    return request.delete(`/emps?ids=${ids}`)
 }
 
