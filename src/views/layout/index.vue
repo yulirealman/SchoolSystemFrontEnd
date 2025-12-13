@@ -1,39 +1,33 @@
 <script setup>
+// Element Plus 图标：纯 UI 资源，只负责展示
 import {
   Avatar, Document, HelpFilled, Histogram, HomeFilled,
   InfoFilled, Menu, Promotion, Share, Tools, UserFilled
 } from '@element-plus/icons-vue'
 
+// vue-i18n：只在组件里使用 t，不关心语言如何同步
 import { useI18n } from 'vue-i18n'
-import { ref, watch } from 'vue'
-import { useElementLang } from '@/utils/elementLang'
 
-const { elementLang } = useElementLang()
-const { t, locale } = useI18n()
+// 全局语言中枢：
+// elementLang    —— 当前语言状态（响应式，全站共享）
+// switchLanguage —— 统一切换语言入口
+// initLanguage   —— 初始化 i18n 同步（只执行一次）
+import { elementLang, switchLanguage, initLanguage } from '@/config/language'
 
+// 初始化语言系统（幂等，多次调用也只生效一次）
+initLanguage()
+
+// 获取翻译函数 t（组件只消费，不管理 locale）
+const { t } = useI18n()
+
+// 语言选择器显示用（key = 语言码，value = 显示文本）
 const languages = {
   en: 'English',
   jp: '日本語',
   cn: '中文'
 }
-
-const currentLang = ref(elementLang.value)
-
-// 初始化同步
-locale.value = elementLang.value
-
-// 关键：双向保持一致
-watch(elementLang, (val) => {
-  currentLang.value = val
-  locale.value = val
-})
-
-const switchLanguage = (lang) => {
-  elementLang.value = lang
-}
-
-
 </script>
+
 
 <template>
   <div class="common-layout">
@@ -54,7 +48,7 @@ const switchLanguage = (lang) => {
             </el-icon>{{ t('common.logout') }}
           </a>
           <a href="#">
-            <el-select v-model="currentLang" placeholder="{{ t('common.language') }}" size="small" @change="switchLanguage"
+            <el-select v-model="elementLang" placeholder="{{ t('common.language') }}" size="small" @change="switchLanguage"
               style="vertical-align: middle; width: 80px; margin-left: 12px; height: 30px;">
               <el-option v-for="(label, key) in languages" :key="key" :label="label" :value="key" />
             </el-select>

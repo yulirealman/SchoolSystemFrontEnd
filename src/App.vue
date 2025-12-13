@@ -1,12 +1,11 @@
 <script setup>
 import { ElConfigProvider } from 'element-plus'
-import { useElementLang } from '@/utils/elementLang'
+import { language } from '@/config/language'
 
-const { elementLocale } = useElementLang()
 </script>
 
 <template>
-  <ElConfigProvider :locale="elementLocale">
+  <ElConfigProvider :locale="language">
     <router-view></router-view>
   </ElConfigProvider>
 </template>
