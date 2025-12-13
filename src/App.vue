@@ -1,14 +1,14 @@
 <script setup>
+import { ElConfigProvider } from 'element-plus'
+import { useElementLang } from '@/utils/elementLang'
 
-import Layout from '@/views/layout/index.vue'   
+const { elementLocale } = useElementLang()
 </script>
 
 <template>
-
-  <router-view></router-view>
-
+  <ElConfigProvider :locale="elementLocale">
+    <router-view></router-view>
+  </ElConfigProvider>
 </template>
-
 <style scoped>
-
 </style>
