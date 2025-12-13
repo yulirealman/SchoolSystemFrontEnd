@@ -1,11 +1,11 @@
 <script setup>
 import { ElConfigProvider } from 'element-plus'
-import { language } from '@/config/language'
+import { activeLanguage } from '@/config/language'
 
 </script>
 
 <template>
-  <ElConfigProvider :locale="language">
+  <ElConfigProvider :locale="activeLanguage">
     <router-view></router-view>
   </ElConfigProvider>
 </template>

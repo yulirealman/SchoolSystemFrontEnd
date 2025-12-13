@@ -7,26 +7,38 @@ import en from 'element-plus/es/locale/lang/en'
 import ja from 'element-plus/es/locale/lang/ja'
 
 /**
- * 当前语言码（全局唯一语言源）
- * - 控制：vue-i18n
- * - 控制：Element Plus
- * - UI 只读 / 只改它
+ * 支持的语言列表
+ * 统一语言码来源，防止乱传
  */
-export const elementLang = ref('cn')
+const SUPPORTED_LANGUAGES = ['cn', 'en', 'jp']
 
 /**
- * Element Plus 使用的 locale
- * 根据 elementLang 自动切换
+ * 当前语言码（全局唯一语言源）
+ * - vue-i18n 依赖它
+ * - Element Plus 依赖它
+ * - UI 只读 / 只修改它
  */
-export const language = computed(() => {
-  if (elementLang.value === 'cn') return zhCn
-  if (elementLang.value === 'en') return en
-  if (elementLang.value === 'jp') return ja
-  return en
+export const language = ref('cn')
+
+/**
+ * Element Plus 当前生效的 locale
+ * 根据 language 自动切换
+ */
+export const activeLanguage = computed(() => {
+  switch (language.value) {
+    case 'cn':
+      return zhCn
+    case 'en':
+      return en
+    case 'jp':
+      return ja
+    default:
+      return en
+  }
 })
 
 /**
- * 防止重复初始化（多组件 import 时）
+ * 防止多次初始化（多个组件调用 initLanguage）
  */
 let initialized = false
 
@@ -34,7 +46,7 @@ let initialized = false
  * 初始化语言系统
  * - 同步 vue-i18n 的 locale
  * - watch 只注册一次
- * - 可在任意组件中安全调用
+ * - 可在任意组件安全调用
  */
 export function initLanguage() {
   if (initialized) return
@@ -43,18 +55,19 @@ export function initLanguage() {
   const { locale } = useI18n()
 
   // 首次同步
-  locale.value = elementLang.value
+  locale.value = language.value
 
-  // elementLang 是唯一源，i18n 被动跟随
-  watch(elementLang, (val) => {
+  // language 是唯一源，vue-i18n 被动跟随
+  watch(language, (val) => {
     locale.value = val
   })
 }
 
 /**
  * 统一语言切换入口
- * 所有切换行为都应通过这里
+ * 所有语言修改必须走这里
  */
 export function switchLanguage(lang) {
-  elementLang.value = lang
+  if (!SUPPORTED_LANGUAGES.includes(lang)) return
+  language.value = lang
 }
