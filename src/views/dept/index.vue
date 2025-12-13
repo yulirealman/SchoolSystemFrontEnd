@@ -182,6 +182,6 @@ const deleteById = async (id) => {
 
 <style scoped>
 .container {
-  margin: 20px 0;
+  margin: 10px 0;
 }
 </style>

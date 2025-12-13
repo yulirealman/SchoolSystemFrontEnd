@@ -348,7 +348,7 @@ let handleSelectionChange = (selection) => {
     <h1>员工管理</h1>
     <!-- 輸入欄位 -->
     <div class="container">
-        <el-form :inline="true" :model="searchEmp" class="demo-form-inline">
+        <el-form :inline="true" :model="searchEmp">
             <el-form-item label="姓名">
                 <el-input v-model="searchEmp.name" placeholder="请输入员工姓名" />
             </el-form-item>
