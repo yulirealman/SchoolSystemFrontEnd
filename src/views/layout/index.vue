@@ -1,21 +1,34 @@
 <script setup>
-import { Avatar, Document, HelpFilled, Histogram, HomeFilled, InfoFilled, Menu, Promotion, Share, Tools, UserFilled } from '@element-plus/icons-vue';
-import { useI18n } from 'vue-i18n'
-import { ref } from 'vue'
-import { useElementLang } from '@/utils/elementLang'
-const { elementLang } = useElementLang()
+import {
+  Avatar, Document, HelpFilled, Histogram, HomeFilled,
+  InfoFilled, Menu, Promotion, Share, Tools, UserFilled
+} from '@element-plus/icons-vue'
 
+import { useI18n } from 'vue-i18n'
+import { ref, watch } from 'vue'
+import { useElementLang } from '@/utils/elementLang'
+
+const { elementLang } = useElementLang()
 const { t, locale } = useI18n()
+
 const languages = {
   en: 'English',
   jp: '日本語',
   cn: '中文'
 }
-const currentLang = ref("cn")
+
+const currentLang = ref(elementLang.value)
+
+// 初始化同步
 locale.value = elementLang.value
-currentLang.value = elementLang.value
+
+// 关键：双向保持一致
+watch(elementLang, (val) => {
+  currentLang.value = val
+  locale.value = val
+})
+
 const switchLanguage = (lang) => {
-  locale.value = lang
   elementLang.value = lang
 }
 
