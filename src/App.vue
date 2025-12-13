@@ -1,6 +1,6 @@
 <script setup>
 import { ElConfigProvider } from 'element-plus'
-import { useElementLang } from '@/utils/elementLang'
+import { useElementLang } from '@/utils/language'
 
 const { elementLocale } = useElementLang()
 </script>

@@ -5,6 +5,7 @@ import en from 'element-plus/es/locale/lang/en'
 import ja from 'element-plus/es/locale/lang/ja'
 
 // ✅ 模块级变量（全局共享）
+// default languge is chinese
 const elementLang = ref('cn')
 
 const elementLocale = computed(() => {

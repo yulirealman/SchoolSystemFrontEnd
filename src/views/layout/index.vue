@@ -2,7 +2,7 @@
 import { Avatar, Document, HelpFilled, Histogram, HomeFilled, InfoFilled, Menu, Promotion, Share, Tools, UserFilled } from '@element-plus/icons-vue';
 import { useI18n } from 'vue-i18n'
 import { ref } from 'vue'
-import { useElementLang } from '@/utils/elementLang'
+import { useElementLang } from '@/utils/language'
 const { elementLang } = useElementLang()
 
 const { t, locale } = useI18n()
@@ -11,9 +11,9 @@ const languages = {
   jp: '日本語',
   cn: '中文'
 }
-const currentLang = ref("cn")
+
+const currentLang = ref(elementLang.value)
 locale.value = elementLang.value
-currentLang.value = elementLang.value
 const switchLanguage = (lang) => {
   locale.value = lang
   elementLang.value = lang
