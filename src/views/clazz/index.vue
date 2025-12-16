@@ -3,8 +3,9 @@
 // 导入依赖
 // ---------------------------
 import { ref, watch, onMounted } from 'vue';
-import { queryPageApi, addEmpApi, updateEmpApi, getEmpByIdApi, deleteEmpByIdApi } from '@/api/emps';
-import { queryDeptListApi } from '@/api/depts';
+import { queryClazzPageApi, addClzzApi, updateClzzApi, getClzzByIdApi, deleteClzzByIdApi } from '@/api/clazzs';
+import { queryAllEmps } from '@/api/emps';
+
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 const jobs = ref([
@@ -16,27 +17,33 @@ const jobs = ref([
     { name: "其他", value: 6 },
 ]);
 
+const emps = ref({
+  name: '',
+  gender: '',
+  begin: '',
+  end: '',
+  page: 1,
+  pageSize: 10
+});
 
-const genders = ref([
-    { name: '男', value: 1 },
-    { name: '女', value: 2 }
-]);
+const masters = ref([]);
+
 
 
 
 // ---------------------------
 // 搜索区：搜索参数 + 监听器
 // ---------------------------
-const searchEmp = ref({ name: '', gender: '', date: [], begin: '', end: '' });
-
+const searchClazz = ref();
+searchClazz.value = { name: '', begin: '', end: '', date: [], page: 1, pageSize: 10 };
 // 监听日期范围变化 → 自动同步 begin/end
-watch(() => searchEmp.value.date, (newVal) => {
+watch(() => searchClazz.value.date, (newVal) => {
     if (newVal.length == 2) {
-        searchEmp.value.begin = newVal[0];
-        searchEmp.value.end = newVal[1];
+        searchClazz.value.begin = newVal[0];
+        searchClazz.value.end = newVal[1];
     } else {
-        searchEmp.value.begin = '';
-        searchEmp.value.end = '';
+        searchClazz.value.begin = '';
+        searchClazz.value.end = '';
     }
 }, { deep: true });
 
@@ -46,37 +53,38 @@ watch(() => searchEmp.value.date, (newVal) => {
 // ---------------------------
 onMounted(() => {
     search();
-    queryDeptList();
+
+    // queryMasters();
 });
 
 
 // ---------------------------
 // 查询列表函数
 // ---------------------------
-const empList = ref([{}]);
+const clazzList = ref([{}]);
 const currentPage = ref(1);
 const pageSize = ref(10);
 const background = ref(true);
 const total = ref(0);
 
 const search = async () => {
-    const result = await queryPageApi(
-        searchEmp.value.name,
-        searchEmp.value.gender,
-        searchEmp.value.begin,
-        searchEmp.value.end,
+    const result = await queryClazzPageApi(
+        searchClazz.value.name,
+        searchClazz.value.begin,
+        searchClazz.value.end,
         currentPage.value,
         pageSize.value
-    )
+    );
     if (result.code === 1) {
-        empList.value = result.data.rows;
+
+        clazzList.value = result.data.rows;
         total.value = result.data.total;
     }
 };
 
 // 清空搜索条件
 const clear = () => {
-    searchEmp.value = { name: '', gender: '', date: [], begin: '', end: '' };
+    searchClazz.value = { name: '', begin: '', end: '', date: [], page: 1, pageSize: 10 };
     search();
 };
 
@@ -106,25 +114,16 @@ const dialogFormRef = ref();
 // ---------------------------
 const depts = ref([]);
 
-const queryDeptList = async () => {
-    const result = await queryDeptListApi();
-    if (result.code === 1) {
-        depts.value = result.data;
-    }
-}
 
-// 员工表单
-const empForm = ref({
-    // image: "",
-    // username: "",
-    // name: "",
-    // gender: null,
-    // phone: "",
-    // job: null,
-    // salary: "",
-    // entryDate: "",
-    // deptId: null,
-    exprList: []
+// 班级表单
+const clazzForm = ref({
+    // name: '',
+    // room: '',
+    // beginDate: '',
+    // endDate: '',
+    // teacherId: null,
+    // subject: null,
+
 });
 
 
@@ -148,13 +147,13 @@ const rules = {
 // 打开对话框（新增）
 // ---------------------------
 const openAdd = () => {
-    dialogFormTitle.value = "新增员工";
+    dialogFormTitle.value = "新增班级";
 
     if (dialogFormRef.value) {
         dialogFormRef.value.resetFields();
 
     }
-    empForm.value = { exprList: [] };
+    clazzForm.value = {};
 
     dialogFormVisible.value = true;
 };
@@ -164,22 +163,21 @@ const openAdd = () => {
 // 打开对话框（编辑）
 // ---------------------------
 const openEdit = async (row) => {
-    dialogFormTitle.value = "编辑员工";
-    if (dialogFormRef.value) {
-        dialogFormRef.value.resetFields();
-        empForm.value = { exprList: [] };
-    }
+    dialogFormTitle.value = "编辑班级";
+    // if (dialogFormRef.value) {
+    //     dialogFormRef.value.resetFields();
+    // }
 
-    dialogFormVisible.value = true;
+    // dialogFormVisible.value = true;
 
-    const result = await getEmpByIdApi(row.id);
-    if (result.code === 1) {
-        empForm.value = result.data;
-        empForm.value.exprList = restoreExprList(empForm.value.exprList);
-        ElMessage.success("获取员工信息成功");
-    } else {
-        ElMessage.error("获取员工信息失败：" + result.msg);
-    }
+    // const result = await getEmpByIdApi(row.id);
+    // if (result.code === 1) {
+    //     empForm.value = result.data;
+    //     empForm.value.exprList = restoreExprList(empForm.value.exprList);
+    //     ElMessage.success("获取员工信息成功");
+    // } else {
+    //     ElMessage.error("获取员工信息失败：" + result.msg);
+    // }
 };
 
 
@@ -204,23 +202,8 @@ const handleUploadSuccess = (res, file) => {
 };
 
 
-// ---------------------------
-// 工作经历：添加 + 删除
-// ---------------------------
-const addExpr = () => {
-    empForm.value.exprList.push({
-        company: "",
-        job: "",
-        begin: "",
-        end: "",
-        date: [] // 初始化时间数组
-    });
-};
 
-const removeExpr = (index) => {
 
-    empForm.value.exprList.splice(index, 1);
-};
 
 
 // ---------------------------
@@ -261,20 +244,8 @@ const submit = async () => {
 
 
 
-const normalizeExprList = (list) => {
-    return list.map(item => ({
-        ...item,
-        begin: item.date?.[0] || '',
-        end: item.date?.[1] || '',
-    }));
-};
 
-const restoreExprList = (list) => {
-    return list.map(item => ({
-        ...item,
-        date: [item.begin, item.end],
-    }));
-};
+
 
 const deleteEmp = async (row) => {
     // 先算要显示的 message
@@ -302,38 +273,6 @@ const deleteEmp = async (row) => {
         })
 };
 
-const deleteEmpBatch = async (ids) => {
-    // 先算要显示的 message
-    if (ids.length === 0) {
-        ElMessage.error("请选择要删除的员工");
-        return;
-    }
-    const message = `确定要删除选中的 ${ids.length} 个员工吗？`
-
-    ElMessageBox.confirm(message, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-    })
-        .then(async () => {
-            const result = await deleteEmpByIdApi(ids);
-            if (result.code === 1) {
-                ElMessage.success('删除成功');
-                search();
-            } else {
-                ElMessage.error("删除失败：" + result.msg);
-            }
-        })
-        .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: '删除取消',
-            })
-        })
-};
-
-
-
 const selectedEmps = ref([]);
 
 let handleSelectionChange = (selection) => {
@@ -348,14 +287,14 @@ let handleSelectionChange = (selection) => {
     <h1>班级管理</h1>
     <!-- 輸入欄位 -->
     <div class="container">
-        <el-form :inline="true" :model="searchEmp" class="demo-form-inline">
+        <el-form :inline="true" :model="searchClazz" class="demo-form-inline">
             <el-form-item label="班级名称">
-                <el-input v-model="searchEmp.name" placeholder="请输入班级名称" />
+                <el-input v-model="searchClazz.name" placeholder="请输入班级名称" />
             </el-form-item>
 
 
             <el-form-item label="结课时间">
-                <el-date-picker v-model="searchEmp.date" type="daterange" value-format="YYYY-MM-DD" range-separator="至"
+                <el-date-picker v-model="searchClazz.date" type="daterange" value-format="YYYY-MM-DD" range-separator="至"
                     start-placeholder="开始日期" end-placeholder="结束日期" />
             </el-form-item>
 
@@ -368,18 +307,18 @@ let handleSelectionChange = (selection) => {
 
     <!-- 新增刪除按鍵 -->
     <div class="container">
-        <el-button type="success" @click="">+ 新增班级</el-button>
+        <el-button type="success" @click="openAdd">+ 新增班级</el-button>
     </div>
 
     <!-- 表格 -->
     <div class="container">
-        <el-table :data="empList" border style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table :data="clazzList" border style="width: 100%" @selection-change="handleSelectionChange">
             <el-table-column type="index" label="序号" width="70" align="center" />
-            <el-table-column prop="className" label="班级名称" width="120" align="center" />
-            <el-table-column prop="classRoom" label="班级教室" width="100" align="center" />
-            <el-table-column prop="headTeacher" label="班主任" width="100" align="center" />
-            <el-table-column prop="beginTime" label="开课时间" width="120" align="center" />
-            <el-table-column prop="endTime" label="结课时间" width="120" align="center" />
+            <el-table-column prop="name" label="班级名称" width="180" align="center" />
+            <el-table-column prop="room" label="班级教室" width="100" align="center" />
+            <el-table-column prop="masterId" label="班主任" width="100" align="center" />
+            <el-table-column prop="beginDate" label="开课时间" width="120" align="center" />
+            <el-table-column prop="endDate" label="结课时间" width="120" align="center" />
             <el-table-column prop="status" label="状态" width="100" align="center" />
             <el-table-column prop="updateTime" label="最后修改时间" width="200" align="center" />
             <el-table-column label="操作" align="center">
@@ -404,137 +343,58 @@ let handleSelectionChange = (selection) => {
     </div>
 
 
-    <!-- 新增员工或编辑员工对话框 -->
+    <!-- 新增班级或编辑班级对话框 -->
     <div class="container">
-        <el-dialog v-model="dialogFormVisible" :title="dialogTitle" width="800px">
+        <el-dialog v-model="dialogFormVisible" :title="dialogTitle" width="500px">
             <!-- 基础信息 -->
-            <el-form :model="empForm" label-width="100px" :rules="rules" ref="dialogFormRef">
+            <el-form :model="clazzForm" label-width="100px" :rules="rules" ref="dialogFormRef">
 
-                <el-row :gutter="20">
-                    <el-col :span="12">
-                        <el-form-item label="用户名" prop="username">
-                            <el-input v-model="empForm.username" placeholder="请输入员工用户名，2-20个字" />
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="姓名" prop="name">
-                            <el-input v-model="empForm.name" placeholder="请输入员工姓名，2-20个字" />
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-
-                <el-row :gutter="20">
-                    <el-col :span="12">
-                        <el-form-item label="性别" prop="gender">
-                            <el-select v-model="empForm.gender" placeholder="请选择性别">
-                                <el-option label="男" :value="1" />
-                                <el-option label="女" :value="2" />
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="手机号" prop="phone">
-                            <el-input v-model="empForm.phone" placeholder="请输入员工手机号" />
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-
-                <el-row :gutter="20">
-                    <el-col :span="12">
-                        <el-form-item label="职位" prop="job">
-                            <el-select v-model="empForm.job" placeholder="请选择职位">
-                                <el-option v-for="job in jobs" :key="job.value" :label="job.name" :value="job.value" />
-
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-
-                    <el-col :span="12">
-                        <el-form-item label="薪资" prop="salary">
-                            <el-input v-model="empForm.salary" type="number" placeholder="请输入员工薪资" />
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-
-                <el-row :gutter="20">
-                    <el-col :span="12">
-                        <el-form-item label="所属部门" prop="deptId">
-                            <el-select v-model="empForm.deptId" placeholder="请选择部门">
-                                <el-option v-for="d in depts" :key="d.id" :label="d.name" :value="d.id" />
-                            </el-select>
-
-                        </el-form-item>
-                    </el-col>
-
-                    <el-col :span="12">
-                        <el-form-item label="入职日期" prop="entryDate">
-                            <el-date-picker type="date" v-model="empForm.entryDate" value-format="YYYY-MM-DD"
-                                placeholder="请选择入职日期" />
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-
-                <!-- 头像上传 -->
-                <el-form-item label="头像" prop="image">
-                    <el-upload class="avatar-uploader" :show-file-list="false" action="#"
-                        :on-success="handleUploadSuccess" :before-upload="beforeUpload">
-                        <img v-if="empForm.image" :src="empForm.image" class="avatar" />
-                        <el-icon v-else class="avatar-uploader-icon">
-                            <Plus />
-                        </el-icon>
-                    </el-upload>
-                </el-form-item>
-
-                <!-- 工作经历 -->
-                <el-row :gutter="10">
-
+                <el-row :gutter="24">
                     <el-col :span="24">
-                        <el-form-item label="工作经历" prop="exprList">
-                            <el-button type="success" @click="addExpr" size="small">
-                                + 添加工作经历
-                            </el-button>
+                        <el-form-item label="班级名称" prop="name">
+                            <el-input v-model="clazzForm.name" placeholder="请输入班级名称，2-20个字" />
                         </el-form-item>
                     </el-col>
                 </el-row>
 
+                <el-row :gutter="24">
+                    <el-col :span="24">
+                        <el-form-item label="教室" prop="room">
+                            <el-input v-model="clazzForm.room" placeholder="请输入班级教室，2-20个字" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="24">
+                    <el-col :span="24">
+                        <el-form-item label="开课时间" prop="beginDate" >
+                            <el-date-picker type="date" v-model="clazzForm.beginDate" value-format="YYYY-MM-DD"
+                                placeholder="请选择开课时间" style="width: 100%" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="24">
+                        <el-form-item label="结课时间" prop="endDate">
+                            <el-date-picker type="date" v-model="clazzForm.endDate" value-format="YYYY-MM-DD"
+                                placeholder="请选择结课时间" style="width: 100%" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="24">
+                        <el-form-item label="班主任" prop="masterId">
+                            <!-- {{ masters }} -->
+                            <el-select v-model="clazzForm.masterId" placeholder="请选择班主任" style="width: 100%" >
+                                <el-option v-for="d in masters" :key="d.id" :label="d.name" :value="d.id" />
+                            </el-select>
+
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                
 
 
-                <div v-for="(item, index) in empForm.exprList" :key="index" class="expr-item">
-                    <el-row :gutter="3">
-
-                        <!-- 时间 -->
-                        <el-col :span="10">
-                            <el-form-item label="时间" label-width="80px" size="small">
-                                <el-date-picker v-model="item.date" type="daterange" value-format="YYYY-MM-DD"
-                                    range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" size="small" />
-                            </el-form-item>
-                        </el-col>
-
-                        <!-- 公司 -->
-                        <el-col :span="6">
-                            <el-form-item label="公司" label-width="60px" size="small">
-                                <el-input v-model="item.company" size="small" />
-                            </el-form-item>
-                        </el-col>
-
-                        <!-- 职位 -->
-                        <el-col :span="6">
-                            <el-form-item label="职位" label-width="60px" size="small">
-                                <el-input v-model="item.job" size="small" />
-                            </el-form-item>
-                        </el-col>
-
-                        <!-- 删除按钮 -->
-                        <el-col :span="2">
-                            <el-form-item label-width="0px" size="small">
-                                <el-button type="danger" size="small" @click="removeExpr(index)">
-                                    -删除
-                                </el-button>
-                            </el-form-item>
-                        </el-col>
-
-                    </el-row>
-                </div>
 
 
 
