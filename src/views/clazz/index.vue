@@ -3,18 +3,18 @@
 // 导入依赖
 // ---------------------------
 import { ref, watch, onMounted } from 'vue';
-import { queryClazzPageApi, addClzzApi, updateClzzApi, getClzzByIdApi, deleteClzzByIdApi } from '@/api/clazzs';
+import { queryClazzPageApi, addClazzApi, updateClazzApi, getClazzByIdApi, deleteClazzByIdApi } from '@/api/clazzs';
 import { queryAllEmps } from '@/api/emps';
 
 import { ElMessage, ElMessageBox } from 'element-plus';
 
-const jobs = ref([
-    { name: "班主任", value: 1 },
-    { name: "讲师", value: 2 },
-    { name: "学工主管", value: 3 },
-    { name: "教研主管", value: 4 },
-    { name: "咨询师", value: 5 },
-    { name: "其他", value: 6 },
+const subjects = ref([
+    { name: "语文", value: 1 },
+    { name: "数学", value: 2 },
+    { name: "英语", value: 3 },
+    { name: "物理", value: 4 },
+    { name: "化学", value: 5 },
+    { name: "生物", value: 6 },
 ]);
 
 const emps = ref({
@@ -25,6 +25,7 @@ const emps = ref({
   page: 1,
   pageSize: 10
 });
+
 
 const masters = ref([]);
 
@@ -145,14 +146,15 @@ const clazzForm = ref({
 // 表单校验规则
 // ---------------------------
 const rules = {
-    username: [{ required: true, message: "请输入员工用户名，2-20个字", min: 2, max: 20 }],
-    name: [{ required: true, message: "请输入员工姓名，2-20个字", min: 2, max: 20 }],
-    phone: [{ required: true, message: "请输入手机号" }],
-    gender: [{ required: true, message: "请选择性别" }],
-    job: [{ required: false, message: "请选择职位" }],
-    entryDate: [{ required: false, message: "请选择入职日期" }],
-    updateDate: [{ required: false, message: "请选择更新日期" }],
+    name: [{ required: true, message: "请输入班级名称"}],
+    room: [{ required: false, message: "请输入班级教室"}],
+    beginDate: [{ required: true, message: "请选开课时间" }],
+    endDate: [{ required: true, message: "请选结课时间" }],
+    masterId: [{ required: false, message: "请选择班主任" }],
+    subject: [{ required: true, message: "请选择课程" }],
+
 };
+
 
 
 // ---------------------------
@@ -231,12 +233,12 @@ const submit = async () => {
             let result;
 
             // 判断新增还是编辑
-            if (empForm.value.id) {
-                empForm.value.exprList = normalizeExprList(empForm.value.exprList);
-                result = await updateEmpApi(empForm.value);
+            if (clazzForm.value.id) {
+                
+                result = await updateClazzApi(clazzForm.value);
             } else {
-                empForm.value.exprList = normalizeExprList(empForm.value.exprList);
-                result = await addEmpApi(empForm.value);
+
+                result = await addClazzApi(clazzForm.value);
             }
 
             if (result.code === 1) {
@@ -364,7 +366,7 @@ let handleSelectionChange = (selection) => {
                 <el-row :gutter="24">
                     <el-col :span="24">
                         <el-form-item label="班级名称" prop="name">
-                            <el-input v-model="clazzForm.name" placeholder="请输入班级名称，2-20个字" />
+                            <el-input v-model="clazzForm.name" placeholder="请输入班级名称" />
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -372,7 +374,7 @@ let handleSelectionChange = (selection) => {
                 <el-row :gutter="24">
                     <el-col :span="24">
                         <el-form-item label="教室" prop="room">
-                            <el-input v-model="clazzForm.room" placeholder="请输入班级教室，2-20个字" />
+                            <el-input v-model="clazzForm.room" placeholder="请输入班级教室" />
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -400,6 +402,15 @@ let handleSelectionChange = (selection) => {
                                 <el-option v-for="d in masters" :key="d.id" :label="d.name" :value="d.id" />
                             </el-select>
 
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="24">
+                        <el-form-item label="学科" prop="subject">
+                            <el-select v-model="clazzForm.subject" placeholder="请选择学科" style="width: 100%" >
+                                <el-option v-for="subject in subjects" :key="subject.value" :label="subject.name" :value="subject.value" />
+                            </el-select>
                         </el-form-item>
                     </el-col>
                 </el-row>

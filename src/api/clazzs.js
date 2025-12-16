@@ -5,19 +5,19 @@ export const queryClazzPageApi = (name,begin,end,page,pageSize)=> {
 }
 
 
-export const addClzzApi = (clazz) => {
+export const addClazzApi = (clazz) => {
     return request.post('/clazzs',clazz)
 }
 
-export const updateClzzApi = (clazz) => {
+export const updateClazzApi = (clazz) => {
     return request.put('/clazzs',clazz)
 }
 
-export const getClzzByIdApi = (id) => {
+export const getClazzByIdApi = (id) => {
     return request.get(`/clazzs/${id}`)
 }
 
-export const deleteClzzByIdApi = (ids) => {
+export const deleteClazzByIdApi = (ids) => {
     return request.delete(`/clazzs/${ids}`)
 }
 
