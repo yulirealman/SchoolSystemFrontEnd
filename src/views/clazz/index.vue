@@ -178,20 +178,19 @@ const openAdd = () => {
 // ---------------------------
 const openEdit = async (row) => {
     dialogFormTitle.value = "编辑班级";
-    // if (dialogFormRef.value) {
-    //     dialogFormRef.value.resetFields();
-    // }
+    if (dialogFormRef.value) {
+        dialogFormRef.value.resetFields();
+    }
 
-    // dialogFormVisible.value = true;
+    dialogFormVisible.value = true;
 
-    // const result = await getEmpByIdApi(row.id);
-    // if (result.code === 1) {
-    //     empForm.value = result.data;
-    //     empForm.value.exprList = restoreExprList(empForm.value.exprList);
-    //     ElMessage.success("获取员工信息成功");
-    // } else {
-    //     ElMessage.error("获取员工信息失败：" + result.msg);
-    // }
+    const result = await getClazzByIdApi(row.id);
+    if (result.code === 1) {
+        clazzForm.value = result.data;
+        ElMessage.success("获取班级信息成功");
+    } else {
+        ElMessage.error("获取班级信息失败：" + result.msg);
+    }
 };
 
 
@@ -261,9 +260,9 @@ const submit = async () => {
 
 
 
-const deleteEmp = async (row) => {
+const openDelete = async (row) => {
     // 先算要显示的 message
-    const message = `确定要删除员工 ${row.name} 吗？`
+    const message = `确定要删除班级 ${row.name} 吗？`
     console.log(row)
     ElMessageBox.confirm(message, '提示', {
         confirmButtonText: '确定',
@@ -271,7 +270,7 @@ const deleteEmp = async (row) => {
         type: 'warning',
     })
         .then(async () => {
-            const result = await deleteEmpByIdApi(row.id);
+            const result = await deleteClazzByIdApi(row.id);
             if (result.code === 1) {
                 ElMessage.success('删除成功');
                 search();
@@ -330,7 +329,9 @@ let handleSelectionChange = (selection) => {
             <el-table-column type="index" label="序号" width="70" align="center" />
             <el-table-column prop="name" label="班级名称" width="180" align="center" />
             <el-table-column prop="room" label="班级教室" width="100" align="center" />
-            <el-table-column prop="masterId" label="班主任" width="100" align="center" />
+            <el-table-column prop="masterName" label="班主任姓名" width="100" align="center" />
+
+
             <el-table-column prop="beginDate" label="开课时间" width="120" align="center" />
             <el-table-column prop="endDate" label="结课时间" width="120" align="center" />
             <el-table-column prop="status" label="状态" width="100" align="center" />
@@ -338,8 +339,8 @@ let handleSelectionChange = (selection) => {
             <el-table-column label="操作" align="center">
                 <template #default="scope">
                     <!-- 之所以scope能看到所有attribute 是因为在调用search（）时已经把数据全部取回来了 -->
-                    <el-button type="primary" size="small" @click="">编辑</el-button>
-                    <el-button type="danger" size="small" @click="">删除</el-button>
+                    <el-button type="primary" size="small" @click="openEdit(scope.row)">编辑</el-button>
+                    <el-button type="danger" size="small" @click="openDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
