@@ -21,9 +21,10 @@ export const deleteEmpByIdApi = (ids) => {
 }
 
 export const queryAllEmps = async (params) => {
-  const pageSize = 100; // 尽量大一点，但别太离谱
-  let page = 1;
-  let all = [];
+  const pageSize = 100
+  let page = 1
+  let all = []
+  let total = 0
 
   while (true) {
     const res = await queryPageApi(
@@ -33,16 +34,37 @@ export const queryAllEmps = async (params) => {
       params.end,
       page,
       pageSize
-    );
+    )
 
-    if (res.code !== 1) break;
+    if (res.code !== 1) {
+      return {
+        code: res.code,
+        msg: res.msg || 'error',
+        data: {
+          total: 0,
+          rows: []
+        }
+      }
+    }
 
-    const rows = res.data.rows;
-    all = all.concat(rows);
+    const { rows, total: pageTotal } = res.data
 
-    if (rows.length < pageSize) break; // 最后一页
-    page++;
+    if (page === 1) {
+      total = pageTotal // 只在第一页取 total
+    }
+
+    all.push(...rows)
+
+    if (rows.length < pageSize) break
+    page++
   }
 
-  return all;
-};
+  return {
+    code: 1,
+    msg: 'success',
+    data: {
+      total,
+      rows: all
+    }
+  }
+}

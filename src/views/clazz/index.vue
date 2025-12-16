@@ -28,7 +28,19 @@ const emps = ref({
 
 const masters = ref([]);
 
-
+const queryMasterList = async () => {
+    const result = await queryAllEmps({
+        name: '',
+        gender: '',
+        begin: '',
+        end: '',
+        page: 1,
+        pageSize: 100
+    });
+    if (result.code === 1) {
+        masters.value = result.data.rows;
+    }
+}
 
 
 // ---------------------------
@@ -54,7 +66,7 @@ watch(() => searchClazz.value.date, (newVal) => {
 onMounted(() => {
     search();
 
-    // queryMasters();
+    queryMasterList();
 });
 
 
@@ -384,7 +396,6 @@ let handleSelectionChange = (selection) => {
                 <el-row :gutter="24">
                     <el-col :span="24">
                         <el-form-item label="班主任" prop="masterId">
-                            <!-- {{ masters }} -->
                             <el-select v-model="clazzForm.masterId" placeholder="请选择班主任" style="width: 100%" >
                                 <el-option v-for="d in masters" :key="d.id" :label="d.name" :value="d.id" />
                             </el-select>
