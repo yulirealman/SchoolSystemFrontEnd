@@ -42,7 +42,8 @@ const search = async () => {
 }
 
 const clear = () => {
-
+    searchStu.value = { name: '', degree: '', clazzId: '' };
+    queryStu();
 }
 
 const addStu = () => {
