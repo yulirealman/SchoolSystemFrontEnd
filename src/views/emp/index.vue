@@ -354,7 +354,7 @@ let handleSelectionChange = (selection) => {
             </el-form-item>
 
             <el-form-item label="性别">
-                <el-select v-model="searchEmp.gender" placeholder="请选择性别" clearable>
+                <el-select v-model="searchEmp.gender" placeholder="请选择性别" clearable style="width: 100%">
                     <el-option v-for="item in genders" :key="item.value" :label="item.name" :value="item.value" />
                 </el-select>
             </el-form-item>
@@ -429,7 +429,7 @@ let handleSelectionChange = (selection) => {
 
     <!-- 新增员工或编辑员工对话框 -->
     <div class="container">
-        <el-dialog v-model="dialogFormVisible" :title="dialogTitle" width="800px">
+        <el-dialog v-model="dialogFormVisible" :title="dialogFormTitle" width="800px">
             <!-- 基础信息 -->
             <el-form :model="empForm" label-width="100px" :rules="rules" ref="dialogFormRef">
 
@@ -449,7 +449,7 @@ let handleSelectionChange = (selection) => {
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item label="性别" prop="gender">
-                            <el-select v-model="empForm.gender" placeholder="请选择性别">
+                            <el-select v-model="empForm.gender" placeholder="请选择性别" style="width: 100%">
                                 <el-option label="男" :value="1" />
                                 <el-option label="女" :value="2" />
                             </el-select>
@@ -465,7 +465,7 @@ let handleSelectionChange = (selection) => {
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item label="职位" prop="job">
-                            <el-select v-model="empForm.job" placeholder="请选择职位">
+                            <el-select v-model="empForm.job" placeholder="请选择职位" style="width: 100%">
                                 <el-option v-for="job in jobs" :key="job.value" :label="job.name" :value="job.value" />
 
                             </el-select>
@@ -482,7 +482,7 @@ let handleSelectionChange = (selection) => {
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item label="所属部门" prop="deptId">
-                            <el-select v-model="empForm.deptId" placeholder="请选择部门">
+                            <el-select v-model="empForm.deptId" placeholder="请选择部门" style="width: 100%">
                                 <el-option v-for="d in depts" :key="d.id" :label="d.name" :value="d.id" />
                             </el-select>
 
@@ -492,7 +492,7 @@ let handleSelectionChange = (selection) => {
                     <el-col :span="12">
                         <el-form-item label="入职日期" prop="entryDate">
                             <el-date-picker type="date" v-model="empForm.entryDate" value-format="YYYY-MM-DD"
-                                placeholder="请选择入职日期" />
+                                placeholder="请选择入职日期" style="width: 100%" />
                         </el-form-item>
                     </el-col>
                 </el-row>

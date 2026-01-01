@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { reactive, onMounted, ref } from 'vue'
 import { queryClazzPageApi } from '@/api/clazzs'
-import { queryStuPageApi } from '@/api/stu'
+import { queryStuPageApi,addStuApi } from '@/api/stu'
 import { ElMessage } from 'element-plus';
+import { isFixedColumn } from 'element-plus/es/components/table/src/util.mjs';
 const searchStu = ref({
     name: '',
     degree: '',
@@ -25,6 +26,34 @@ const total = ref(0);
 const clazzList = ref([{}]);
 const selectedStus = ref([]);
 const stuList = ref([{}]);
+const dialogFormTitle = ref("");
+const dialogFormRef = ref();
+const dialogFormVisible = ref(false);
+const stuForm =ref({
+    name: '',
+    no: '',
+    gender: null,
+    phone: '',
+    idCard: '',
+    isCollege: null,
+    address: '',
+    degree: '',
+    clazzId: '',
+    graduationDate: '',
+});
+const rules = {
+    name: [{ required: true, message: "请输入学员姓名，2-20个字", min: 2, max: 20 }],
+    no: [{ required: true, message: "学号为必填选项"}],
+    phone: [{ required: true, message: "手机号为必填选项" }],
+    gender: [{ required: true, message: "性别为必填选项" }],
+    idCard: [{ required: true, message: "身份证号为必填选项" }],
+    isCollege: [{ required: true, message: "是否院校学院为必填选项" }],
+    clazzId: [{ required: true, message: "班级为必填选项" }],
+
+};
+let handleSelectionChange = (selection) => {
+  selectedStus.value = selection.map(item => item.id);
+};
 
 const search = async () => {
     const result = await queryStuPageApi(
@@ -47,7 +76,14 @@ const clear = () => {
 }
 
 const addStu = () => {
-    console.log('addStu')
+    dialogFormTitle.value = "新增学员";
+
+    if (dialogFormRef.value) {
+        dialogFormRef.value.resetFields();
+
+    }
+
+    dialogFormVisible.value = true;
 }
 
 const deleteBatch = (selectedStus) => {
@@ -101,6 +137,43 @@ const queryStu = async () => {
     }
 
 };
+
+// ---------------------------
+const submit = async () => {
+
+    if (!dialogFormRef.value) return;
+
+    dialogFormRef.value.validate(async (valid) => {
+
+        if (valid) {
+            let result;
+
+            // 判断新增还是编辑
+            if (stuForm.value.id) {
+               
+                // result = await updateStuApi(stuForm.value);
+            } else {
+                
+                result = await addStuApi(stuForm.value);
+            }
+
+            if (result.code === 1) {
+                ElMessage.success('保存成功');
+                dialogFormVisible.value = false;
+                search();
+            } else {
+                ElMessage.error("保存失败：" + result.msg);
+            }
+
+        } else {
+            ElMessage.error("表单验证失败，请检查输入项");
+        }
+    });
+
+};
+
+
+
 onMounted(() => {
     queryClazzList();
     queryStu();
@@ -197,6 +270,109 @@ onMounted(() => {
             @current-change="handleCurrentChange" />
     </div>
 
+
+    <!-- 新增员工或编辑员工对话框 -->
+    <div class="container">
+        <el-dialog v-model="dialogFormVisible" :title="dialogFormTitle" width="800px">
+            <!-- 基础信息 -->
+            <el-form :model="stuForm" label-width="100px" :rules="rules" ref="dialogFormRef">
+
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="姓名" prop="name">
+                            <el-input v-model="stuForm.name" placeholder="请输入学员姓名" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="学号" prop="no">
+                            <el-input v-model="stuForm.no" placeholder="请输入学员学号" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="性别" prop="gender">
+                            <el-select v-model="stuForm.gender" placeholder="请选择性别"   style="width: 100%">
+                                <el-option label="男" :value="1" />
+                                <el-option label="女" :value="2" />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="手机号" prop="phone">
+                            <el-input v-model="stuForm.phone" placeholder="请输入手机号" />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="身份证号" prop="idCard">
+                            <el-input v-model="stuForm.idCard" placeholder="请输入身份证号" />
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="12">
+                        <el-form-item label="是否院校" prop="isCollege">
+                            <el-select v-model="stuForm.isCollege" placeholder="请选择是否院校学院" style="width: 100%">
+                                <el-option label="是" :value="1" />
+                                <el-option label="否" :value="0" />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="联系地址" prop="address">
+                            <el-input v-model="stuForm.address" placeholder="请输入联系地址" />
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="12">
+                        <el-form-item label="最高学历" prop="degree">
+                            <el-select v-model="stuForm.degree" placeholder="请选择最高学历" style="width: 100%">
+                                <el-option label="初中" :value="1" />
+                                <el-option label="高中" :value="2" />
+                                <el-option label="大专" :value="3" />
+                                <el-option label="本科" :value="4" />
+                                <el-option label="硕士" :value="5" />
+                                <el-option label="博士" :value="6" />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="毕业时间" prop="graduationDate">
+                            <el-date-picker type="date" v-model="stuForm.graduationDate" value-format="YYYY-MM-DD"
+                                placeholder="请选择毕业时间"   style="width: 100%"/>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="12">
+                        <el-form-item label="班级" prop="clazzId">
+                            <el-select v-model="stuForm.clazzId" placeholder="请选择班级" style="width: 100%">
+                                <el-option v-for="clazz in clazzList" :key="clazz.id" :label="clazz.name" :value="clazz.id" />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
+
+       
+
+            </el-form>
+
+            <!-- Footer -->
+            <template #footer>
+                <el-button @click="dialogFormVisible = false">取消</el-button>
+                <el-button type="primary" @click="submit">保存</el-button>
+            </template>
+        </el-dialog>
+    </div>
 
 
 </template>
