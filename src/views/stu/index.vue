@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { reactive, onMounted, ref } from 'vue'
 import { queryClazzPageApi } from '@/api/clazzs'
+import { queryStuPageApi } from '@/api/stu'
 import { ElMessage } from 'element-plus';
 const searchStu = ref({
     name: '',
     degree: '',
-    clazz: '',
+    clazzId: '',
 })
 const degrees = [
     { name: '初中', value: 1 },
@@ -16,11 +17,28 @@ const degrees = [
     { name: '博士', value: 6 },
 ];
 
+const currentPage = ref(1);
+const pageSize = ref(10);
+const background = ref(true);
+const total = ref(0);
 
 const clazzList = ref([{}]);
 const selectedStus = ref([]);
-const search = () => {
-    console.log('submit!')
+const stuList = ref([{}]);
+
+const search = async () => {
+    const result = await queryStuPageApi(
+        searchStu.value.name,
+        searchStu.value.degree,
+        searchStu.value.clazzId,
+        currentPage.value,
+        pageSize.value
+    )
+    if (result.code === 1) {
+        stuList.value = result.data.rows;
+        total.value = result.data.total;
+    }
+    
 }
 
 const clear = () => {
@@ -34,6 +52,18 @@ const addStu = () => {
 const deleteBatch = (selectedStus) => {
     console.log('deleteBatch', selectedStus)
 }
+
+// 分页相关
+// 分页相关
+const handleSizeChange = (size) => {
+    pageSize.value = size;
+    queryStu();
+};
+
+const handleCurrentChange = (page) => {
+    currentPage.value = page;
+    queryStu();
+};
 
 
 
@@ -54,12 +84,26 @@ const queryClazzList = async () => {
     }
 };
 
-const currentPage = ref(1);
-const pageSize = ref(10);
-const background = ref(true);
-const total = ref(0);
-onMounted(async () => {
-    await queryClazzList();
+const queryStu = async () => { 
+    try {
+        const result = await queryStuPageApi(searchStu.value.name, searchStu.value.degree, searchStu.value.clazzId, currentPage.value, pageSize.value);
+        stuList.value = [];
+        if (result.code === 1) {
+            stuList.value = result.data.rows;
+            total.value = result.data.total;
+            console.log('stuList', stuList.value);
+        } else {
+            ElMessage.error('获取学员列表失败');
+        }
+    } catch (error) {
+        ElMessage.error('获取学员列表出错');
+    }
+
+};
+onMounted(() => {
+    queryClazzList();
+    queryStu();
+
 });
 </script>
 
@@ -81,7 +125,7 @@ onMounted(async () => {
             </el-form-item>
 
             <el-form-item label="所属班级">
-                <el-select v-model="searchStu.clazz" placeholder="请选择所属班级" clearable>
+                <el-select v-model="searchStu.clazzId" placeholder="请选择所属班级" clearable>
                     <el-option v-for="item in clazzList" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
             </el-form-item>
@@ -102,12 +146,12 @@ onMounted(async () => {
 
     <!-- 表格 -->
     <div class="container">
-        <el-table :data="empList" border style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table :data="stuList" border style="width: 100%" @selection-change="handleSelectionChange">
 
             <el-table-column type="selection" width="55" align="center" />
-            <el-table-column prop="name" label="姓名" width="80" align="center" />
+            <el-table-column prop="name" label="姓名" width="90" align="center" />
             <el-table-column prop="no" label="学号" width="120" align="center" />
-            <el-table-column prop="clazzId" label="班级" width="120" align="center" />
+            <el-table-column prop="clazzName" label="班级" width="130" align="center" />
             
             <el-table-column label="性别" width="80" align="center">
                 <template #default="scope">
@@ -129,7 +173,7 @@ onMounted(async () => {
              <el-table-column prop="violationScore" label="违纪扣分" width="90" align="center" />
 
 
-            <el-table-column prop="updateTime" label="最后操作时间" width="200" align="center" />
+            <el-table-column prop="updateTime" label="最后操作时间" width="150" align="center" />
             <el-table-column label="操作" align="center">
                 <template #default="scope">
                     <!-- 之所以scope能看到所有attribute 是因为在调用search（）时已经把数据全部取回来了 -->
