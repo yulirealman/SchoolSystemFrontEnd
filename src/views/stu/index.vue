@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { reactive, onMounted, ref } from 'vue'
 import { queryClazzPageApi } from '@/api/clazzs'
-import { queryStuPageApi,addStuApi } from '@/api/stu'
+import { queryStuPageApi,addStuApi,getStuByIdApi,updateStuApi } from '@/api/stu'
 import { ElMessage } from 'element-plus';
 import { isFixedColumn } from 'element-plus/es/components/table/src/util.mjs';
+import { id } from 'element-plus/es/locales.mjs';
 const searchStu = ref({
     name: '',
     degree: '',
@@ -82,9 +83,27 @@ const addStu = () => {
         dialogFormRef.value.resetFields();
 
     }
+    stuForm.value = { name: '', no: '', gender: null, phone: '', idCard: '', isCollege: null, address: '', degree: '', clazzId: '', graduationDate: '' };
 
     dialogFormVisible.value = true;
 }
+
+const openEdit = async (row) => {
+    dialogFormTitle.value = "编辑学员";
+    if (dialogFormRef.value) {
+        dialogFormRef.value.resetFields();
+    }
+
+    dialogFormVisible.value = true;
+
+    const result = await getStuByIdApi(row.id);
+    if (result.code === 1) {
+        stuForm.value = result.data;
+        ElMessage.success("获取学员信息成功");
+    } else {
+        ElMessage.error("获取学员信息失败：" + result.msg);
+    }
+};
 
 const deleteBatch = (selectedStus) => {
     console.log('deleteBatch', selectedStus)
@@ -151,7 +170,8 @@ const submit = async () => {
             // 判断新增还是编辑
             if (stuForm.value.id) {
                
-                // result = await updateStuApi(stuForm.value);
+                result = await updateStuApi(stuForm.value);
+                console.log('updateStuApi', stuForm.value);
             } else {
                 
                 result = await addStuApi(stuForm.value);

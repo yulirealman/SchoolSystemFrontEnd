@@ -6,3 +6,11 @@ export const queryStuPageApi = (name,degree,clazzId,page,pageSize)=> {
 export const addStuApi = (stu) => {
     return request.post('/students',stu)
 }
+
+export const getStuByIdApi = (id) => {
+    return request.get(`/students/${id}`)
+}
+
+export const updateStuApi = (stu) => {
+    return request.put('/students',stu)
+}
