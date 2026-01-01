@@ -18,14 +18,24 @@ const degrees = [
 
 
 const clazzList = ref([{}]);
-
-const onSubmit = () => {
+const selectedStus = ref([]);
+const search = () => {
     console.log('submit!')
 }
 
 const clear = () => {
 
 }
+
+const addStu = () => {
+    console.log('addStu')
+}
+
+const deleteBatch = (selectedStus) => {
+    console.log('deleteBatch', selectedStus)
+}
+
+
 
 const queryClazzList = async () => {
   try {
@@ -75,11 +85,20 @@ onMounted(async () => {
 
 
             <el-form-item>
-                <el-button type="primary" @click="onSubmit">查询</el-button>
+                <el-button type="primary" @click="search">查询</el-button>
                 <el-button type="info" @click="clear">清空</el-button>
             </el-form-item>
         </el-form>
     </div>
+        <!-- 新增刪除按鍵 -->
+    <div class="container">
+        <el-button type="success" @click="addStu()">+ 新增学员</el-button>
+        <el-button type="danger" @click="deleteBatch(selectedStus)">- 批量删除</el-button>
+
+    </div>
+
+
+
 
 </template>
 
