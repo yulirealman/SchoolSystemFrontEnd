@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { reactive, onMounted, ref } from 'vue'
-import {queryClazzPageApi} from '@/api/clazzs'
+import { queryClazzPageApi } from '@/api/clazzs'
 import { ElMessage } from 'element-plus';
 const searchStu = ref({
     name: '',
@@ -8,12 +8,12 @@ const searchStu = ref({
     clazz: '',
 })
 const degrees = [
-  { name: '初中', value: 1 },
-  { name: '高中', value: 2 },
-  { name: '大专', value: 3 },
-  { name: '本科', value: 4 },
-  { name: '硕士', value: 5 },
-  { name: '博士', value: 6 },
+    { name: '初中', value: 1 },
+    { name: '高中', value: 2 },
+    { name: '大专', value: 3 },
+    { name: '本科', value: 4 },
+    { name: '硕士', value: 5 },
+    { name: '博士', value: 6 },
 ];
 
 
@@ -38,23 +38,26 @@ const deleteBatch = (selectedStus) => {
 
 
 const queryClazzList = async () => {
-  try {
-    const result = await queryClazzPageApi("", "", "", 1, 100);
-    clazzList.value = []; 
-    if (result.code === 1) {
-      clazzList.value = result.data.rows.map(item => ({
-        id: item.id,
-        name: item.name
-      }));
-    } else {
-      ElMessage.error('获取班级列表失败');
+    try {
+        const result = await queryClazzPageApi("", "", "", 1, 100);
+        clazzList.value = [];
+        if (result.code === 1) {
+            clazzList.value = result.data.rows.map(item => ({
+                id: item.id,
+                name: item.name
+            }));
+        } else {
+            ElMessage.error('获取班级列表失败');
+        }
+    } catch (error) {
+        ElMessage.error('获取班级列表出错');
     }
-  } catch (error) {
-    ElMessage.error('获取班级列表出错');
-  }
 };
 
-
+const currentPage = ref(1);
+const pageSize = ref(10);
+const background = ref(true);
+const total = ref(0);
 onMounted(async () => {
     await queryClazzList();
 });
@@ -90,13 +93,64 @@ onMounted(async () => {
             </el-form-item>
         </el-form>
     </div>
-        <!-- 新增刪除按鍵 -->
+    <!-- 新增刪除按鍵 -->
     <div class="container">
         <el-button type="success" @click="addStu()">+ 新增学员</el-button>
         <el-button type="danger" @click="deleteBatch(selectedStus)">- 批量删除</el-button>
 
     </div>
 
+    <!-- 表格 -->
+    <div class="container">
+        <el-table :data="empList" border style="width: 100%" @selection-change="handleSelectionChange">
+
+            <el-table-column type="selection" width="55" align="center" />
+            <el-table-column prop="name" label="姓名" width="80" align="center" />
+            <el-table-column prop="no" label="学号" width="120" align="center" />
+            <el-table-column prop="clazzId" label="班级" width="120" align="center" />
+            
+            <el-table-column label="性别" width="80" align="center">
+                <template #default="scope">
+                    {{ scope.row.gender == 1 ? '男' : '女' }}
+                </template>
+            </el-table-column>
+
+            <el-table-column prop="phone" label="手机号" width="120" align="center" />
+
+            <el-table-column prop="degree" label="最高学历" width="90" align="center">
+                <template #default="{ row }">
+                    <span>
+                        {{degrees.find(degree => degree.value === row.degree)?.name || '其他'}}
+                    </span>
+                </template>
+            </el-table-column>
+            
+             <el-table-column prop="violationCount" label="违纪次数" width="90" align="center" />
+             <el-table-column prop="violationScore" label="违纪扣分" width="90" align="center" />
+
+
+            <el-table-column prop="updateTime" label="最后操作时间" width="200" align="center" />
+            <el-table-column label="操作" align="center">
+                <template #default="scope">
+                    <!-- 之所以scope能看到所有attribute 是因为在调用search（）时已经把数据全部取回来了 -->
+                    <el-button type="primary" size="small" @click="openEdit(scope.row)">编辑</el-button>
+                    <el-button type="warning" size="small" @click="openViolation(scope.row)">违纪</el-button>
+                    <el-button type="danger" size="small" @click="openDelete(scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+
+
+    </div>
+
+    <!-- 分頁器 -->
+    <div class="container">
+        <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
+            :page-sizes="[5, 10, 20, 30, 50, 75, 100]" :background="background"
+            layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange"
+            @current-change="handleCurrentChange" />
+    </div>
 
 
 
