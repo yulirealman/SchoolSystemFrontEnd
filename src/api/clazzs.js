@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-//import { queryClazzPageApi, addClzzApi, updateClzzApi, getClzzByIdApi, deleteClzzByIdApi } from '@/api/clazzs';
 export const queryClazzPageApi = (name,begin,end,page,pageSize)=> {
    return request.get(`/clazzs?name=${name}&begin=${begin}&end=${end}&page=${page}&pageSize=${pageSize}`)
 }
