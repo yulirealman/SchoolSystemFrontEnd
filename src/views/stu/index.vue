@@ -133,9 +133,36 @@ const deleteStu = async (row) => {
 };
 
 
-const deleteBatch = (selectedStus) => {
-    console.log('deleteBatch', selectedStus)
-}
+const deleteStuBatch = async (ids) => { 
+    // 先算要显示的 message
+    if(ids.length === 0) {
+        ElMessage.error("请选择要删除的员工");
+        return;
+    }
+    const message = `确定要删除选中的 ${ids.length} 个员工吗？`
+
+    ElMessageBox.confirm(message, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+    })
+        .then(async () => {
+            const result = await deleteStuByIdApi(ids);
+            if (result.code === 1) {
+                ElMessage.success('删除成功');
+                search();
+            } else {
+                ElMessage.error("删除失败：" + result.msg);
+            }
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: '删除取消',
+            })
+        })
+};
+
 
 // 分页相关
 // 分页相关
@@ -262,7 +289,7 @@ onMounted(() => {
     <!-- 新增刪除按鍵 -->
     <div class="container">
         <el-button type="success" @click="addStu()">+ 新增学员</el-button>
-        <el-button type="danger" @click="deleteBatch(selectedStus)">- 批量删除</el-button>
+        <el-button type="danger" @click="deleteStuBatch(selectedStus)">- 批量删除</el-button>
 
     </div>
 
