@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { reactive, onMounted, ref } from 'vue'
 import { queryClazzPageApi } from '@/api/clazzs'
-import { queryStuPageApi,addStuApi,getStuByIdApi,updateStuApi,deleteStuByIdApi } from '@/api/stu'
-import { ElMessage,ElMessageBox } from 'element-plus';
+import { queryStuPageApi, addStuApi, getStuByIdApi, updateStuApi, deleteStuByIdApi, updateViolationStuApi } from '@/api/stu'
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { isFixedColumn } from 'element-plus/es/components/table/src/util.mjs';
 import { id } from 'element-plus/es/locales.mjs';
 const searchStu = ref({
@@ -18,6 +18,11 @@ const degrees = [
     { name: '硕士', value: 5 },
     { name: '博士', value: 6 },
 ];
+const dialogViolationFormRef = ref();
+const dialogViolationForm = ref({
+    id: '',
+    violationScore: '',
+});
 
 const currentPage = ref(1);
 const pageSize = ref(10);
@@ -30,7 +35,8 @@ const stuList = ref([{}]);
 const dialogFormTitle = ref("");
 const dialogFormRef = ref();
 const dialogFormVisible = ref(false);
-const stuForm =ref({
+const dialogViolationVisible = ref(false);
+const stuForm = ref({
     name: '',
     no: '',
     gender: null,
@@ -44,7 +50,7 @@ const stuForm =ref({
 });
 const rules = {
     name: [{ required: true, message: "请输入学员姓名，2-20个字", min: 2, max: 20 }],
-    no: [{ required: true, message: "学号为必填选项"}],
+    no: [{ required: true, message: "学号为必填选项" }],
     phone: [{ required: true, message: "手机号为必填选项" }],
     gender: [{ required: true, message: "性别为必填选项" }],
     idCard: [{ required: true, message: "身份证号为必填选项" }],
@@ -53,7 +59,7 @@ const rules = {
 
 };
 let handleSelectionChange = (selection) => {
-  selectedStus.value = selection.map(item => item.id);
+    selectedStus.value = selection.map(item => item.id);
 };
 
 const search = async () => {
@@ -68,7 +74,7 @@ const search = async () => {
         stuList.value = result.data.rows;
         total.value = result.data.total;
     }
-    
+
 }
 
 const clear = () => {
@@ -133,9 +139,9 @@ const deleteStu = async (row) => {
 };
 
 
-const deleteStuBatch = async (ids) => { 
+const deleteStuBatch = async (ids) => {
     // 先算要显示的 message
-    if(ids.length === 0) {
+    if (ids.length === 0) {
         ElMessage.error("请选择要删除的员工");
         return;
     }
@@ -163,6 +169,49 @@ const deleteStuBatch = async (ids) => {
         })
 };
 
+
+const openViolation = (row) => {
+
+    if (dialogViolationFormRef.value) {
+        dialogViolationFormRef.value.resetFields();
+    }
+    dialogViolationVisible.value = true;
+    dialogFormTitle.value = "违规记录";
+    dialogViolationForm.value.id = row.id;
+
+};
+
+const submitViolation = async () => {
+    if (!dialogViolationFormRef.value) return;
+
+    dialogViolationFormRef.value.validate(async (valid) => {
+
+        if (valid) {
+            let result;
+
+            result = await updateViolationStuApi(dialogViolationForm.value);
+
+            if (result.code === 1) {
+                ElMessage.success('保存成功');
+                dialogViolationVisible.value = false;
+
+                search();
+            } else {
+                ElMessage.error("保存失败：" + result.msg);
+            }
+
+        } else {
+            ElMessage.error("表单验证失败，请检查输入项");
+        }
+    });
+
+}
+const violationRules = {
+    violationScore: [
+        { required: true, message: '请输入违纪分数', trigger: 'blur' },
+        { pattern: /^\d+$/, message: '必须是数字', trigger: 'blur' }
+    ]
+};
 
 // 分页相关
 // 分页相关
@@ -195,7 +244,7 @@ const queryClazzList = async () => {
     }
 };
 
-const queryStu = async () => { 
+const queryStu = async () => {
     try {
         const result = await queryStuPageApi(searchStu.value.name, searchStu.value.degree, searchStu.value.clazzId, currentPage.value, pageSize.value);
         stuList.value = [];
@@ -224,11 +273,11 @@ const submit = async () => {
 
             // 判断新增还是编辑
             if (stuForm.value.id) {
-               
+
                 result = await updateStuApi(stuForm.value);
                 console.log('updateStuApi', stuForm.value);
             } else {
-                
+
                 result = await addStuApi(stuForm.value);
             }
 
@@ -301,7 +350,7 @@ onMounted(() => {
             <el-table-column prop="name" label="姓名" width="90" align="center" />
             <el-table-column prop="no" label="学号" width="120" align="center" />
             <el-table-column prop="clazzName" label="班级" width="130" align="center" />
-            
+
             <el-table-column label="性别" width="80" align="center">
                 <template #default="scope">
                     {{ scope.row.gender == 1 ? '男' : '女' }}
@@ -317,9 +366,9 @@ onMounted(() => {
                     </span>
                 </template>
             </el-table-column>
-            
-             <el-table-column prop="violationCount" label="违纪次数" width="90" align="center" />
-             <el-table-column prop="violationScore" label="违纪扣分" width="90" align="center" />
+
+            <el-table-column prop="violationCount" label="违纪次数" width="90" align="center" />
+            <el-table-column prop="violationScore" label="违纪扣分" width="90" align="center" />
 
 
             <el-table-column prop="updateTime" label="最后操作时间" width="150" align="center" />
@@ -368,7 +417,7 @@ onMounted(() => {
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item label="性别" prop="gender">
-                            <el-select v-model="stuForm.gender" placeholder="请选择性别"   style="width: 100%">
+                            <el-select v-model="stuForm.gender" placeholder="请选择性别" style="width: 100%">
                                 <el-option label="男" :value="1" />
                                 <el-option label="女" :value="2" />
                             </el-select>
@@ -423,21 +472,22 @@ onMounted(() => {
                     <el-col :span="12">
                         <el-form-item label="毕业时间" prop="graduationDate">
                             <el-date-picker type="date" v-model="stuForm.graduationDate" value-format="YYYY-MM-DD"
-                                placeholder="请选择毕业时间"   style="width: 100%"/>
+                                placeholder="请选择毕业时间" style="width: 100%" />
                         </el-form-item>
                     </el-col>
 
                     <el-col :span="12">
                         <el-form-item label="班级" prop="clazzId">
                             <el-select v-model="stuForm.clazzId" placeholder="请选择班级" style="width: 100%">
-                                <el-option v-for="clazz in clazzList" :key="clazz.id" :label="clazz.name" :value="clazz.id" />
+                                <el-option v-for="clazz in clazzList" :key="clazz.id" :label="clazz.name"
+                                    :value="clazz.id" />
                             </el-select>
                         </el-form-item>
                     </el-col>
 
                 </el-row>
 
-       
+
 
             </el-form>
 
@@ -449,6 +499,29 @@ onMounted(() => {
         </el-dialog>
     </div>
 
+
+    <div class="container">
+        <el-dialog v-model="dialogViolationVisible" :title="dialogFormTitle" width="400px">
+            <el-form :model="dialogViolationForm" label-width="120px" ref="dialogViolationFormRef"
+                :rules="violationRules" label-position="top">
+
+                <el-row :gutter="24">
+                    <el-col :span="24">
+                        <el-form-item label="请输入违纪分数" prop="violationScore">
+                            <el-input v-model="dialogViolationForm.violationScore" placeholder="请输入违纪分数" />
+                        </el-form-item>
+                    </el-col>
+
+                </el-row>
+            </el-form>
+
+            <!-- Footer -->
+            <template #footer>
+                <el-button @click="dialogViolationVisible = false">取消</el-button>
+                <el-button type="primary" @click="submitViolation">保存</el-button>
+            </template>
+        </el-dialog>
+    </div>
 
 </template>
 

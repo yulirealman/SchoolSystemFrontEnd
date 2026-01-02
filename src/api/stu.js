@@ -18,3 +18,7 @@ export const updateStuApi = (stu) => {
 export const deleteStuByIdApi = (id) => {
     return request.delete(`/students/${id}`)
 }
+
+export const updateViolationStuApi = (violationForm) => {
+    return request.put(`/students/violation/${violationForm.id}/${violationForm.violationScore}`)
+}
