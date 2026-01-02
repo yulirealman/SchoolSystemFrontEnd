@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { reactive, onMounted, ref } from 'vue'
 import { queryClazzPageApi } from '@/api/clazzs'
-import { queryStuPageApi,addStuApi,getStuByIdApi,updateStuApi } from '@/api/stu'
-import { ElMessage } from 'element-plus';
+import { queryStuPageApi,addStuApi,getStuByIdApi,updateStuApi,deleteStuByIdApi } from '@/api/stu'
+import { ElMessage,ElMessageBox } from 'element-plus';
 import { isFixedColumn } from 'element-plus/es/components/table/src/util.mjs';
 import { id } from 'element-plus/es/locales.mjs';
 const searchStu = ref({
@@ -104,6 +104,34 @@ const openEdit = async (row) => {
         ElMessage.error("获取学员信息失败：" + result.msg);
     }
 };
+
+
+
+const deleteStu = async (row) => {
+    // 先算要显示的 message
+    const message = `确定要删除学员 ${row.name} 吗？`
+    ElMessageBox.confirm(message, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+    })
+        .then(async () => {
+            const result = await deleteStuByIdApi(row.id);
+            if (result.code === 1) {
+                ElMessage.success('删除成功');
+                search();
+            } else {
+                ElMessage.error("删除失败：" + result.msg);
+            }
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: '删除取消',
+            })
+        })
+};
+
 
 const deleteBatch = (selectedStus) => {
     console.log('deleteBatch', selectedStus)
@@ -273,7 +301,7 @@ onMounted(() => {
                     <!-- 之所以scope能看到所有attribute 是因为在调用search（）时已经把数据全部取回来了 -->
                     <el-button type="primary" size="small" @click="openEdit(scope.row)">编辑</el-button>
                     <el-button type="warning" size="small" @click="openViolation(scope.row)">违纪</el-button>
-                    <el-button type="danger" size="small" @click="openDelete(scope.row)">删除</el-button>
+                    <el-button type="danger" size="small" @click="deleteStu(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>

@@ -14,3 +14,7 @@ export const getStuByIdApi = (id) => {
 export const updateStuApi = (stu) => {
     return request.put('/students',stu)
 }
+
+export const deleteStuByIdApi = (id) => {
+    return request.delete(`/students/${id}`)
+}
