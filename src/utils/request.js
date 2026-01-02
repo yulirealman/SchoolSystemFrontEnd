@@ -7,6 +7,16 @@ const request = axios.create({
 })
 
 
+request.interceptors.request.use(
+  (config) => {
+    const loginUser = JSON.parse(localStorage.getItem("loginUser"));
+    if(loginUser && loginUser.token){
+      config.headers.token = loginUser.token;
+    }
+    return config
+  },
+  (error) => {return Promise.reject(error);}
+);
 
 request.interceptors.response.use(
   (response) => {return response.data},
