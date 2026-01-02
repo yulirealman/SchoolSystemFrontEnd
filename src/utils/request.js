@@ -27,6 +27,8 @@ request.interceptors.response.use(
       ElMessage.error("登录已过期，请重新登录");
 
       router.push('/login');
+    }else{
+      ElMessage.error("接口访问异常");
     }
     return Promise.reject(error);}
 );

@@ -4,6 +4,7 @@ import {
   Avatar, Document, HelpFilled, Histogram, HomeFilled,
   InfoFilled, Menu, Promotion, Share, Tools, UserFilled
 } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 // vue-i18n：组件只使用 t，不关心语言同步逻辑
 import { useI18n } from 'vue-i18n'
@@ -26,6 +27,22 @@ const languageList = {
   jp: '日本語',
   cn: '中文'
 }
+
+
+const username = JSON.parse(localStorage.getItem("loginUser")).name;
+const logout = () => {
+  ElMessageBox.confirm('确认退出登录吗？', '提示', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    localStorage.removeItem("loginUser");
+    location.href = "/login";
+  }).catch(() => {
+    // 取消操作
+    ElMessage.info('已取消退出登录');
+  });
+}
 </script>
 
 <template>
@@ -35,17 +52,22 @@ const languageList = {
         <span class="title">{{ t('common.welcome') }}</span>
 
         <span class="right_tool">
-          <a href="#">
+          <!-- <a href="#">
             <el-icon>
               <EditPen />
             </el-icon>{{ t('common.changePassword') }} &nbsp;&nbsp;&nbsp; &nbsp;
-          </a>
+          </a> -->
 
-          <a href="#">
+          <!-- <a href="#">
             <el-icon>
               <SwitchButton />
             </el-icon>{{ t('common.logout') }}
+          </a> -->
+          <a href="javascript:void(0)" @click="logout">
+            {{ t('common.logout') }}
+            [{{ username }}]
           </a>
+
           <a href="#">
             <el-select v-model="language" placeholder="{{ t('common.language') }}" size="small" @change="switchLanguage"
               style="vertical-align: middle; width: 80px; margin-left: 12px; height: 30px;">
@@ -188,4 +210,5 @@ const languageList = {
   padding: 20px;
   overflow: auto;
 }
+
 </style>
