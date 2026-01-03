@@ -14,6 +14,7 @@ import { useI18n } from 'vue-i18n'
 // switchLanguage  —— 统一切换语言入口（按钮用）
 // initLanguage    —— 初始化语言系统（只执行一次）
 import { language, initLanguage, switchLanguage } from '@/config/language'
+import { onMounted, ref } from 'vue'
 
 // 初始化语言系统（幂等）
 initLanguage()
@@ -29,7 +30,19 @@ const languageList = {
 }
 
 
-const username = JSON.parse(localStorage.getItem("loginUser")).name;
+const username = ref("")
+onMounted(() => {
+  const userStr = localStorage.getItem('loginUser')
+  if (!userStr) return
+
+  try {
+    const user = JSON.parse(userStr)
+    username.value = user?.name ?? ''
+  } catch (e) {
+    console.error('invalid user in localStorage', e)
+  }
+})
+
 const logout = () => {
   ElMessageBox.confirm('确认退出登录吗？', '提示', {
     confirmButtonText: '确认',
