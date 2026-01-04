@@ -26,7 +26,61 @@
       "log": "日志信息统计"
     }
   },
-  "dept":{
+  "clazz": {
+    "title": "班级管理",
+    "inputArea":{
+      "clazzName": "班级名称",
+      "clazzNamePlaceholder": "请输入班级名称",
+      "endDate":"结课日期",
+      "startPlaceholder": "开始日期",
+      "endPlaceholder": "结课日期",
+      "to":"至",
+      "search": "查询",
+      "clear": "清空"
+    },
+    "dialog": {
+      "button": "新增班级",
+      "titleAdd": "新增班级",
+      "titleEdit": "编辑班级",
+      "clazzName": "班级名称",
+      "clazzNamePlaceholder": "请输入班级名称",
+      "clazzNameRule": "班级名称不能为空",
+      "room": "教室",
+      "roomPlaceholder": "请输入教室",
+      "beginDate": "开始日期",
+      "beginDatePlaceholder": "请选择开始日期",
+      "beginDateRule": "开始日期不能为空",
+      "endDate": "结束日期",
+      "endDatePlaceholder": "请选择结束日期",
+      "endDateRule": "结束日期不能为空",
+      "masterName": "教师",
+      "masterPlaceholder": "请选择教师",
+      "subject": "学科",
+      "subjectPlaceholder": "请选择学科",
+      "subjectRule": "学科不能为空",
+      "save": "保存",
+      "cancel": "取消",
+      "formValidateFail": "表单验证失败，请检查输入项",
+      "saveSuccess": "保存成功",
+      "saveFail": "保存失败：",
+      "subjects": {
+        "literature": "文学",
+        "history": "历史学",
+        "philosophy": "哲学",
+        "economics": "经济学",
+        "law": "法学",
+        "education": "教育学",
+        "management": "管理学",
+        "science": "理学",
+        "engineering": "工学",
+        "agriculture": "农学",
+        "medicine": "医学",
+        "art": "艺术学"
+      }
+    }
+
+  },
+  "dept": {
     "title": "部门管理",
     "add": "新增",
     "index": "序号",
@@ -51,5 +105,4 @@
     "name": "部门名称",
     "prompt": "提示"
   }
-
 }

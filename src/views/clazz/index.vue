@@ -7,14 +7,22 @@ import { queryClazzPageApi, addClazzApi, updateClazzApi, getClazzByIdApi, delete
 import { queryAllEmps } from '@/api/emps';
 
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { useI18n } from 'vue-i18n'  
+const { t } = useI18n()
 
 const subjects = ref([
-    { name: "语文", value: 1 },
-    { name: "数学", value: 2 },
-    { name: "英语", value: 3 },
-    { name: "物理", value: 4 },
-    { name: "化学", value: 5 },
-    { name: "生物", value: 6 },
+    { name: 'clazz.dialog.subjects.literature', value: 1 },
+    { name: 'clazz.dialog.subjects.history', value: 2 },
+    { name: 'clazz.dialog.subjects.philosophy', value: 3 },
+    { name: 'clazz.dialog.subjects.economics', value: 4 },
+    { name: 'clazz.dialog.subjects.law', value: 5 },
+    { name: 'clazz.dialog.subjects.education', value: 6 },  
+    { name: 'clazz.dialog.subjects.management', value: 7 },
+    { name: 'clazz.dialog.subjects.science', value: 8 },
+    { name: 'clazz.dialog.subjects.engineering', value: 9 },
+    { name: 'clazz.dialog.subjects.agriculture', value: 10 },
+    { name: 'clazz.dialog.subjects.medicine', value: 11 },
+    { name: 'clazz.dialog.subjects.art', value: 12 },
 ]);
 
 const emps = ref({
@@ -297,23 +305,23 @@ let handleSelectionChange = (selection) => {
 
 <template>
     <!-- h1 -->
-    <h1>班级管理</h1>
+    <h1>{{ t('clazz.title') }}</h1>
     <!-- 輸入欄位 -->
     <div class="container">
         <el-form :inline="true" :model="searchClazz" class="demo-form-inline">
-            <el-form-item label="班级名称">
-                <el-input v-model="searchClazz.name" placeholder="请输入班级名称" />
+            <el-form-item :label="t('clazz.inputArea.clazzName')">
+                <el-input v-model="searchClazz.name" :placeholder="t('clazz.inputArea.clazzNamePlaceholder')" />
             </el-form-item>
 
 
-            <el-form-item label="结课时间">
-                <el-date-picker v-model="searchClazz.date" type="daterange" value-format="YYYY-MM-DD" range-separator="至"
-                    start-placeholder="开始日期" end-placeholder="结束日期" />
+            <el-form-item :label="t('clazz.inputArea.endDate')">
+                <el-date-picker v-model="searchClazz.date" type="daterange" value-format="YYYY-MM-DD" :range-separator="t('clazz.inputArea.to')"
+                    :start-placeholder="t('clazz.inputArea.startPlaceholder')" :end-placeholder="t('clazz.inputArea.endPlaceholder')" />
             </el-form-item>
 
             <el-form-item>
-                <el-button type="primary" @click="search">查询</el-button>
-                <el-button type="info" @click="clear">清空</el-button>
+                <el-button type="primary" @click="search">{{ t('clazz.inputArea.search') }}</el-button>
+                <el-button type="info" @click="clear">{{ t('clazz.inputArea.clear') }}</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -360,46 +368,46 @@ let handleSelectionChange = (selection) => {
 
     <!-- 新增班级或编辑班级对话框 -->
     <div class="container">
-        <el-dialog v-model="dialogFormVisible" :title="dialogTitle" width="500px">
+        <el-dialog v-model="dialogFormVisible" :title="dialogFormTitle" width="500px">
             <!-- 基础信息 -->
             <el-form :model="clazzForm" label-width="100px" :rules="rules" ref="dialogFormRef">
 
                 <el-row :gutter="24">
                     <el-col :span="24">
-                        <el-form-item label="班级名称" prop="name">
-                            <el-input v-model="clazzForm.name" placeholder="请输入班级名称" />
+                        <el-form-item :label="t('clazz.dialog.clazzName')" prop="name">
+                            <el-input v-model="clazzForm.name" :placeholder="t('clazz.dialog.clazzNamePlaceholder')" />
                         </el-form-item>
                     </el-col>
                 </el-row>
 
                 <el-row :gutter="24">
                     <el-col :span="24">
-                        <el-form-item label="教室" prop="room">
-                            <el-input v-model="clazzForm.room" placeholder="请输入班级教室" />
+                        <el-form-item :label="t('clazz.dialog.room')" prop="room">
+                            <el-input v-model="clazzForm.room" :placeholder="t('clazz.dialog.roomPlaceholder')" />
                         </el-form-item>
                     </el-col>
                 </el-row>
 
                 <el-row :gutter="24">
                     <el-col :span="24">
-                        <el-form-item label="开课时间" prop="beginDate" >
+                        <el-form-item :label="t('clazz.dialog.beginDate')" prop="beginDate" >
                             <el-date-picker type="date" v-model="clazzForm.beginDate" value-format="YYYY-MM-DD"
-                                placeholder="请选择开课时间" style="width: 100%" />
+                                :placeholder="t('clazz.dialog.beginDatePlaceholder')" style="width: 100%" />
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="24">
-                        <el-form-item label="结课时间" prop="endDate">
+                        <el-form-item :label="t('clazz.dialog.endDate')" prop="endDate">
                             <el-date-picker type="date" v-model="clazzForm.endDate" value-format="YYYY-MM-DD"
-                                placeholder="请选择结课时间" style="width: 100%" />
+                                :placeholder="t('clazz.dialog.endDatePlaceholder')" style="width: 100%" />
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="24">
-                        <el-form-item label="班主任" prop="masterId">
-                            <el-select v-model="clazzForm.masterId" placeholder="请选择班主任" style="width: 100%" >
+                        <el-form-item :label="t('clazz.dialog.masterName')" prop="masterId">
+                            <el-select v-model="clazzForm.masterId" :placeholder="t('clazz.dialog.masterPlaceholder')" style="width: 100%" >
                                 <el-option v-for="d in masters" :key="d.id" :label="d.name" :value="d.id" />
                             </el-select>
 
@@ -408,9 +416,9 @@ let handleSelectionChange = (selection) => {
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="24">
-                        <el-form-item label="学科" prop="subject">
-                            <el-select v-model="clazzForm.subject" placeholder="请选择学科" style="width: 100%" >
-                                <el-option v-for="subject in subjects" :key="subject.value" :label="subject.name" :value="subject.value" />
+                        <el-form-item :label="t('clazz.dialog.subject')" prop="subject">
+                            <el-select v-model="clazzForm.subject" :placeholder="t('clazz.dialog.subjectPlaceholder')" style="width: 100%" >
+                                <el-option v-for="subject in subjects" :key="subject.value" :label="t(subject.name)" :value="subject.value" />
                             </el-select>
                         </el-form-item>
                     </el-col>

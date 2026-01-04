@@ -18,7 +18,7 @@ const elementLocales = { zh: zhCn, en: en, ja: ja }
 // 4️⃣ 監聽 i18n 語言變化，動態更新 Element Plus
 watch(i18nLocale, (newLang) => {
     console.log('i18nLocale: ', newLang)
-  elementLocale.value = elementLocales[newLang] || en
+  elementLocale.value = elementLocales[newLang] || zhCn 
 })
 </script>
 
