@@ -26,7 +26,94 @@
       "log": "Log Info"
     }
   },
-  "dept":{
+  "clazz": {
+    "title": "Class Management",
+    "inputArea": {
+      "clazzName": "Class Name",
+      "clazzNamePlaceholder": "Please enter class name",
+      "endDate": "End Date",
+      "startPlaceholder": "Start date",
+      "endPlaceholder": "End date",
+      "to": "to",
+      "search": "Search",
+      "clear": "Clear"
+    },
+    "dialog": {
+      "button": "Add Class",
+      "titleAdd": "Add Class",
+      "titleEdit": "Edit Class",
+      "clazzName": "Class Name",
+      "clazzNamePlaceholder": "Please enter class name",
+      "clazzNameRule": "Class name cannot be empty",
+      "room": "Classroom",
+      "roomPlaceholder": "Please enter classroom",
+      "beginDate": "Start Date",
+      "beginDatePlaceholder": "Please select start date",
+      "beginDateRule": "Start date cannot be empty",
+      "endDate": "End Date",
+      "endDatePlaceholder": "Please select end date",
+      "endDateRule": "End date cannot be empty",
+      "masterName": "Teacher",
+      "masterPlaceholder": "Please select teacher",
+      "subject": "Subject",
+      "subjectPlaceholder": "Please select subject",
+      "subjectRule": "Subject cannot be empty",
+      "save": "Save",
+      "cancel": "Cancel",
+      "formValidateFail": "Form validation failed, please check the input fields",
+      "saveSuccess": "Saved successfully",
+      "saveFail": "Save failed: ",
+      "subjects": {
+        "literature": "Literature",
+        "history": "History",
+        "philosophy": "Philosophy",
+        "economics": "Economics",
+        "law": "Law",
+        "education": "Education",
+        "management": "Management",
+        "science": "Science",
+        "engineering": "Engineering",
+        "agriculture": "Agriculture",
+        "medicine": "Medicine",
+        "art": "Art"
+      }
+    },
+    "table": {
+      "index": "No.",
+      "clazzName": "Class Name",
+      "room": "Classroom",
+      "masterName": "Teacher",
+      "beginDate": "Start Date",
+      "endDate": "End Date",
+      "status": "Status",
+      "statusActive": "In Progress",
+      "statusInactive": "Not Started",
+      "statusEnd": "Completed",
+      "lastUpdateTime": "Last Updated Time",
+      "subject": "Subject",
+      "operation": "Operation",
+      "edit": "Edit",
+      "delete": "Delete",
+      "messageSuccess": "Class information retrieved successfully",
+      "messageFail": "Failed to retrieve class information: ",
+      "confirmButton": "Confirm",
+      "cancelButton": "Cancel",
+      "deleteTitle": "Notice",
+      "deleteConfirm": "Are you sure you want to delete",
+      "messageDeleteSuccess": "Deleted successfully",
+      "messageDeleteCancel": "Deletion cancelled",
+      "messageFailDelete": "Deletion failed: Sorry, this class has students and cannot be deleted directly"
+    },
+    "rule": {
+      "requiredName": "Class name cannot be empty",
+      "notRequiredRoom": "Please enter classroom",
+      "requiredBeginDate": "Start date cannot be empty",
+      "requiredEndDate": "End date cannot be empty",
+      "notRequiredMasterId": "Please select teacher",
+      "requiredSubject": "Subject cannot be empty"
+    }
+  },
+  "dept": {
     "title": "Department Management",
     "add": "Add",
     "index": "No.",
@@ -50,6 +137,5 @@
     "lengthLimit": "Department name length must be less than 30 characters",
     "name": "Department Name",
     "prompt": "Warning"
-  
   }
 }

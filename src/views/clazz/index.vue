@@ -7,7 +7,7 @@ import { queryClazzPageApi, addClazzApi, updateClazzApi, getClazzByIdApi, delete
 import { queryAllEmps } from '@/api/emps';
 
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { useI18n } from 'vue-i18n'  
+import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const subjects = ref([
@@ -16,7 +16,7 @@ const subjects = ref([
     { name: 'clazz.dialog.subjects.philosophy', value: 3 },
     { name: 'clazz.dialog.subjects.economics', value: 4 },
     { name: 'clazz.dialog.subjects.law', value: 5 },
-    { name: 'clazz.dialog.subjects.education', value: 6 },  
+    { name: 'clazz.dialog.subjects.education', value: 6 },
     { name: 'clazz.dialog.subjects.management', value: 7 },
     { name: 'clazz.dialog.subjects.science', value: 8 },
     { name: 'clazz.dialog.subjects.engineering', value: 9 },
@@ -24,14 +24,20 @@ const subjects = ref([
     { name: 'clazz.dialog.subjects.medicine', value: 11 },
     { name: 'clazz.dialog.subjects.art', value: 12 },
 ]);
+const statusMap = {
+    '已开班': 'clazz.table.statusActive',
+    '未开班': 'clazz.table.statusInactive',
+    '结课': 'clazz.table.statusEnd'
+}
+
 
 const emps = ref({
-  name: '',
-  gender: '',
-  begin: '',
-  end: '',
-  page: 1,
-  pageSize: 10
+    name: '',
+    gender: '',
+    begin: '',
+    end: '',
+    page: 1,
+    pageSize: 10
 });
 
 
@@ -154,12 +160,12 @@ const clazzForm = ref({
 // 表单校验规则
 // ---------------------------
 const rules = {
-    name: [{ required: true, message: "请输入班级名称"}],
-    room: [{ required: false, message: "请输入班级教室"}],
-    beginDate: [{ required: true, message: "请选开课时间" }],
-    endDate: [{ required: true, message: "请选结课时间" }],
-    masterId: [{ required: false, message: "请选择班主任" }],
-    subject: [{ required: true, message: "请选择课程" }],
+    name: [{ required: true, message: t("clazz.rule.requiredName") }],
+    room: [{ required: false, message: t("clazz.rule.notRequiredRoom") }],
+    beginDate: [{ required: true, message: t("clazz.rule.requiredBeginDate") }],
+    endDate: [{ required: true, message: t("clazz.rule.requiredEndDate") }],
+    masterId: [{ required: false, message: t("clazz.rule.notRequiredMasterId") }],
+    subject: [{ required: true, message: t("clazz.rule.requiredSubject") }],
 
 };
 
@@ -169,7 +175,7 @@ const rules = {
 // 打开对话框（新增）
 // ---------------------------
 const openAdd = () => {
-    dialogFormTitle.value = "新增班级";
+    dialogFormTitle.value = t("clazz.dialog.titleAdd");
 
     if (dialogFormRef.value) {
         dialogFormRef.value.resetFields();
@@ -185,7 +191,7 @@ const openAdd = () => {
 // 打开对话框（编辑）
 // ---------------------------
 const openEdit = async (row) => {
-    dialogFormTitle.value = "编辑班级";
+    dialogFormTitle.value = t("clazz.dialog.titleEdit");
     if (dialogFormRef.value) {
         dialogFormRef.value.resetFields();
     }
@@ -195,9 +201,9 @@ const openEdit = async (row) => {
     const result = await getClazzByIdApi(row.id);
     if (result.code === 1) {
         clazzForm.value = result.data;
-        ElMessage.success("获取班级信息成功");
+        ElMessage.success(t("clazz.table.messageSuccess"));
     } else {
-        ElMessage.error("获取班级信息失败：" + result.msg);
+        ElMessage.error(t("clazz.table.messageFail") + result.msg);
     }
 };
 
@@ -241,7 +247,7 @@ const submit = async () => {
 
             // 判断新增还是编辑
             if (clazzForm.value.id) {
-                
+
                 result = await updateClazzApi(clazzForm.value);
             } else {
 
@@ -249,15 +255,15 @@ const submit = async () => {
             }
 
             if (result.code === 1) {
-                ElMessage.success('保存成功');
+                ElMessage.success(t("clazz.dialog.saveSuccess"));
                 dialogFormVisible.value = false;
                 search();
             } else {
-                ElMessage.error("保存失败：" + result.msg);
+                ElMessage.error(t("clazz.dialog.saveFail") + result.msg);
             }
 
         } else {
-            ElMessage.error("表单验证失败，请检查输入项");
+            ElMessage.error(t("clazz.dialog.formValidateFail"));
         }
     });
 
@@ -270,26 +276,26 @@ const submit = async () => {
 
 const openDelete = async (row) => {
     // 先算要显示的 message
-    const message = `确定要删除班级 ${row.name} 吗？`
+    const message = t("clazz.table.deleteConfirm") + ` ${row.name} 吗？`
     console.log(row)
-    ElMessageBox.confirm(message, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+    ElMessageBox.confirm(message, t("clazz.table.deleteTitle"), {
+        confirmButtonText: t("clazz.table.confirmButton"),
+        cancelButtonText: t("clazz.table.cancelButton"),
         type: 'warning',
     })
         .then(async () => {
             const result = await deleteClazzByIdApi(row.id);
             if (result.code === 1) {
-                ElMessage.success('删除成功');
+                ElMessage.success(t("clazz.table.messageDeleteSuccess"));
                 search();
             } else {
-                ElMessage.error("删除失败：" + result.msg);
+                ElMessage.error(t("clazz.table.messageFailDelete"));
             }
         })
         .catch(() => {
             ElMessage({
                 type: 'info',
-                message: '删除取消',
+                message: t("clazz.table.messageDeleteCancel"),
             })
         })
 };
@@ -315,8 +321,10 @@ let handleSelectionChange = (selection) => {
 
 
             <el-form-item :label="t('clazz.inputArea.endDate')">
-                <el-date-picker v-model="searchClazz.date" type="daterange" value-format="YYYY-MM-DD" :range-separator="t('clazz.inputArea.to')"
-                    :start-placeholder="t('clazz.inputArea.startPlaceholder')" :end-placeholder="t('clazz.inputArea.endPlaceholder')" />
+                <el-date-picker v-model="searchClazz.date" type="daterange" value-format="YYYY-MM-DD"
+                    :range-separator="t('clazz.inputArea.to')"
+                    :start-placeholder="t('clazz.inputArea.startPlaceholder')"
+                    :end-placeholder="t('clazz.inputArea.endPlaceholder')" />
             </el-form-item>
 
             <el-form-item>
@@ -328,27 +336,31 @@ let handleSelectionChange = (selection) => {
 
     <!-- 新增刪除按鍵 -->
     <div class="container">
-        <el-button type="success" @click="openAdd">+ 新增班级</el-button>
+        <el-button type="success" @click="openAdd">+ {{ t('clazz.dialog.button') }}</el-button>
     </div>
 
     <!-- 表格 -->
     <div class="container">
         <el-table :data="clazzList" border style="width: 100%" @selection-change="handleSelectionChange">
-            <el-table-column type="index" label="序号" width="70" align="center" />
-            <el-table-column prop="name" label="班级名称" width="180" align="center" />
-            <el-table-column prop="room" label="班级教室" width="100" align="center" />
-            <el-table-column prop="masterName" label="班主任姓名" width="100" align="center" />
+            <el-table-column type="index" :label="t('clazz.table.index')" width="70" align="center" />
+            <el-table-column prop="name" :label="t('clazz.table.clazzName')" width="180" align="center" />
+            <el-table-column prop="room" :label="t('clazz.table.room')" width="100" align="center" />
+            <el-table-column prop="masterName" :label="t('clazz.table.masterName')" width="100" align="center" />
 
 
-            <el-table-column prop="beginDate" label="开课时间" width="120" align="center" />
-            <el-table-column prop="endDate" label="结课时间" width="120" align="center" />
-            <el-table-column prop="status" label="状态" width="100" align="center" />
-            <el-table-column prop="updateTime" label="最后修改时间" width="200" align="center" />
-            <el-table-column label="操作" align="center">
+            <el-table-column prop="beginDate" :label="t('clazz.table.beginDate')" width="120" align="center" />
+            <el-table-column prop="endDate" :label="t('clazz.table.endDate')" width="120" align="center" />
+            <el-table-column prop="status" :label="t('clazz.table.status')" width="100" align="center"
+                :formatter="row => t(statusMap[row.status] || row.status)" />
+
+            <el-table-column prop="updateTime" :label="t('clazz.table.lastUpdateTime')" width="200" align="center" />
+            <el-table-column :label="t('clazz.table.operation')" align="center">
                 <template #default="scope">
                     <!-- 之所以scope能看到所有attribute 是因为在调用search（）时已经把数据全部取回来了 -->
-                    <el-button type="primary" size="small" @click="openEdit(scope.row)">编辑</el-button>
-                    <el-button type="danger" size="small" @click="openDelete(scope.row)">删除</el-button>
+                    <el-button type="primary" size="small" @click="openEdit(scope.row)">{{ t('clazz.table.edit')
+                        }}</el-button>
+                    <el-button type="danger" size="small" @click="openDelete(scope.row)">{{ t('clazz.table.delete')
+                        }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -390,7 +402,7 @@ let handleSelectionChange = (selection) => {
 
                 <el-row :gutter="24">
                     <el-col :span="24">
-                        <el-form-item :label="t('clazz.dialog.beginDate')" prop="beginDate" >
+                        <el-form-item :label="t('clazz.dialog.beginDate')" prop="beginDate">
                             <el-date-picker type="date" v-model="clazzForm.beginDate" value-format="YYYY-MM-DD"
                                 :placeholder="t('clazz.dialog.beginDatePlaceholder')" style="width: 100%" />
                         </el-form-item>
@@ -407,7 +419,8 @@ let handleSelectionChange = (selection) => {
                 <el-row :gutter="24">
                     <el-col :span="24">
                         <el-form-item :label="t('clazz.dialog.masterName')" prop="masterId">
-                            <el-select v-model="clazzForm.masterId" :placeholder="t('clazz.dialog.masterPlaceholder')" style="width: 100%" >
+                            <el-select v-model="clazzForm.masterId" :placeholder="t('clazz.dialog.masterPlaceholder')"
+                                style="width: 100%">
                                 <el-option v-for="d in masters" :key="d.id" :label="d.name" :value="d.id" />
                             </el-select>
 
@@ -417,13 +430,15 @@ let handleSelectionChange = (selection) => {
                 <el-row :gutter="24">
                     <el-col :span="24">
                         <el-form-item :label="t('clazz.dialog.subject')" prop="subject">
-                            <el-select v-model="clazzForm.subject" :placeholder="t('clazz.dialog.subjectPlaceholder')" style="width: 100%" >
-                                <el-option v-for="subject in subjects" :key="subject.value" :label="t(subject.name)" :value="subject.value" />
+                            <el-select v-model="clazzForm.subject" :placeholder="t('clazz.dialog.subjectPlaceholder')"
+                                style="width: 100%">
+                                <el-option v-for="subject in subjects" :key="subject.value" :label="t(subject.name)"
+                                    :value="subject.value" />
                             </el-select>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                
+
 
 
 
@@ -435,8 +450,8 @@ let handleSelectionChange = (selection) => {
 
             <!-- Footer -->
             <template #footer>
-                <el-button @click="dialogFormVisible = false">取消</el-button>
-                <el-button type="primary" @click="submit">保存</el-button>
+                <el-button @click="dialogFormVisible = false">{{ t('clazz.table.cancelButton') }}</el-button>
+                <el-button type="primary" @click="submit">{{ t('clazz.table.confirmButton') }}</el-button>
             </template>
         </el-dialog>
     </div>

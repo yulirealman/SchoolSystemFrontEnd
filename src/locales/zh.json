@@ -28,13 +28,13 @@
   },
   "clazz": {
     "title": "班级管理",
-    "inputArea":{
+    "inputArea": {
       "clazzName": "班级名称",
       "clazzNamePlaceholder": "请输入班级名称",
-      "endDate":"结课日期",
+      "endDate": "结课日期",
       "startPlaceholder": "开始日期",
       "endPlaceholder": "结课日期",
-      "to":"至",
+      "to": "至",
       "search": "查询",
       "clear": "清空"
     },
@@ -77,8 +77,44 @@
         "medicine": "医学",
         "art": "艺术学"
       }
-    }
+    },
+    "table": {
+      "index": "序号",
+      "clazzName": "班级名称",
+      "room": "教室",
+      "masterName": "教师",
+      "beginDate": "开课日期",
+      "endDate": "结课日期",
+      "status": "状态",
+      "statusActive": "已开班",
+      "statusInactive": "未开班",
+      "statusEnd": "结课",
+      "lastUpdateTime": "最后操作时间",
+      "subject": "学科",
+      "operation": "操作",
+      "edit": "编辑",
+      "delete": "删除",
+      "messageSuccess": "获取班级信息成功",
+      "messageFail": "获取班级信息失败：",
 
+      "confirmButton": "确定",
+      "cancelButton": "取消",
+      "deleteTitle":"提示",
+      "deleteConfirm": "确定要删除",
+      "messageDeleteSuccess": "删除成功",
+      "messageDeleteCancel": "删除已取消",
+      "messageFailDelete": "删除失败：对不起, 该班级下有学生, 不能直接删除"
+    },
+    "rule":{
+      "requiredName": "班级名称不能为空",
+      "notRequiredRoom":"请输入班级教室",
+      "requiredBeginDate": "开课日期不能为空",
+      "requiredEndDate": "结课日期不能为空",
+      "notRequiredMasterId": "请选择教师",
+      "requiredSubject": "学科不能为空"
+
+
+    }
   },
   "dept": {
     "title": "部门管理",
