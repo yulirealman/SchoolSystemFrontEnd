@@ -3,8 +3,7 @@ import { reactive, onMounted, ref } from 'vue'
 import { queryClazzPageApi } from '@/api/clazzs'
 import { queryStuPageApi, addStuApi, getStuByIdApi, updateStuApi, deleteStuByIdApi, updateViolationStuApi } from '@/api/stu'
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { isFixedColumn } from 'element-plus/es/components/table/src/util.mjs';
-import { id } from 'element-plus/es/locales.mjs';
+
 const searchStu = ref({
     name: '',
     degree: '',

@@ -6,32 +6,30 @@ import {
 } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
-// vue-i18n：组件只使用 t，不关心语言同步逻辑
-import { useI18n } from 'vue-i18n'
-
-// 全局语言中枢
-// language        —— 当前语言码（ref，全站共享）
-// switchLanguage  —— 统一切换语言入口（按钮用）
-// initLanguage    —— 初始化语言系统（只执行一次）
-import { language, initLanguage, switchLanguage } from '@/config/language'
 import { onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+const { locale, t } = useI18n()
 
-// 初始化语言系统（幂等）
-initLanguage()
-
-// 翻译函数
-const { t } = useI18n()
-
-// 语言选择器显示用
 const languageList = {
+  zh: '中文',
   en: 'English',
-  jp: '日本語',
-  cn: '中文'
+  ja: '日本語'
 }
+
+
+
+
+function switchLanguage(lang) {
+  locale.value = lang  
+  console.log('locale', locale.value)
+}
+
+
 
 
 const username = ref("")
 onMounted(() => {
+
   const userStr = localStorage.getItem('loginUser')
   if (!userStr) return
 
@@ -82,7 +80,7 @@ const logout = () => {
           </a>
 
           <a href="#">
-            <el-select v-model="language" placeholder="{{ t('common.language') }}" size="small" @change="switchLanguage"
+            <el-select v-model="language" :placeholder="t('common.language')" size="small" @change="switchLanguage"
               style="vertical-align: middle; width: 80px; margin-left: 12px; height: 30px;">
               <el-option v-for="(label, key) in languageList" :key="key" :label="label" :value="key" />
             </el-select>

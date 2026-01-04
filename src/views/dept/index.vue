@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue';
 import { queryDeptListApi, queryByIdApi, addApi, updateApi, deleteByIdApi } from '@/api/depts';
 import {ElMessage,ElMessageBox} from 'element-plus'
 import { EditPen, Delete } from '@element-plus/icons-vue'
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n'  
 const { t } = useI18n()
 
 onMounted(() => {
