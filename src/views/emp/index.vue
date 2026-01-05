@@ -292,7 +292,7 @@ const deleteEmp = async (row) => {
         .then(async () => {
             const result = await deleteEmpByIdApi(row.id);
             if (result.code === 1) {
-                ElMessage.success( t('emp.table.deleteOps.deleteSuccess'));
+                ElMessage.success(t('emp.table.deleteOps.deleteSuccess'));
                 search();
             } else {
                 ElMessage.error(t('emp.table.deleteOps.deleteFail') + result.msg);
@@ -306,13 +306,13 @@ const deleteEmp = async (row) => {
         })
 };
 
-const deleteEmpBatch = async (ids) => { 
+const deleteEmpBatch = async (ids) => {
     // 先算要显示的 message
-    if(ids.length === 0) {
+    if (ids.length === 0) {
         ElMessage.error(t('emp.batchDelete.alertMessage'));
         return;
     }
-    const message =  t('emp.batchDelete.confirmMessage');
+    const message = t('emp.batchDelete.confirmMessage');
 
     ElMessageBox.confirm(message, t('emp.batchDelete.title'), {
         confirmButtonText: t('emp.batchDelete.confirm'),
@@ -341,7 +341,7 @@ const deleteEmpBatch = async (ids) => {
 const selectedEmps = ref([]);
 
 let handleSelectionChange = (selection) => {
-  selectedEmps.value = selection.map(item => item.id);
+    selectedEmps.value = selection.map(item => item.id);
 };
 
 
@@ -358,13 +358,16 @@ let handleSelectionChange = (selection) => {
             </el-form-item>
 
             <el-form-item :label="t('emp.inputArea.gender')">
-                <el-select v-model="searchEmp.gender" :placeholder="t('emp.inputArea.genderPlaceholder')" clearable style="width: 100%">
+                <el-select v-model="searchEmp.gender" :placeholder="t('emp.inputArea.genderPlaceholder')" clearable
+                    style="width: 100%">
                     <el-option v-for="item in genders" :key="item.value" :label="t(item.name)" :value="item.value" />
                 </el-select>
             </el-form-item>
             <el-form-item :label="t('emp.inputArea.entryDate')">
-                <el-date-picker v-model="searchEmp.date" type="daterange" value-format="YYYY-MM-DD" :range-separator="t('emp.inputArea.to')"
-                    :start-placeholder="t('emp.inputArea.startDatePlaceholder')" :end-placeholder="t('emp.inputArea.endDatePlaceholder')" placeholder="请选择入职时间" />
+                <el-date-picker v-model="searchEmp.date" type="daterange" value-format="YYYY-MM-DD"
+                    :range-separator="t('emp.inputArea.to')"
+                    :start-placeholder="t('emp.inputArea.startDatePlaceholder')"
+                    :end-placeholder="t('emp.inputArea.endDatePlaceholder')" placeholder="请选择入职时间" />
             </el-form-item>
 
             <el-form-item>
@@ -377,7 +380,8 @@ let handleSelectionChange = (selection) => {
     <!-- 新增刪除按鍵 -->
     <div class="container">
         <el-button type="primary" @click="openAdd()">+ {{ t('emp.dialog.button') }}</el-button>
-        <el-button type="danger" @click="deleteEmpBatch(selectedEmps)">- {{ t('emp.batchDelete.batchDelete') }}</el-button>
+        <el-button type="danger" @click="deleteEmpBatch(selectedEmps)">- {{ t('emp.batchDelete.batchDelete')
+            }}</el-button>
 
     </div>
 
@@ -401,8 +405,14 @@ let handleSelectionChange = (selection) => {
 
             <el-table-column prop="job" :label="t('emp.table.position')" width="120" align="center">
                 <template #default="{ row }">
+
                     <span>
-                        {{jobs.find(job => job.value === row.job)?.name || t('emp.table.other')}}
+                        {{
+                            t(
+                                jobs.find(d => d.value === row.job)?.name
+                                || 'emp.dialog.positions.others'
+                            )
+                        }}
                     </span>
                 </template>
             </el-table-column>
@@ -412,8 +422,10 @@ let handleSelectionChange = (selection) => {
             <el-table-column :label="t('emp.table.operation')" align="center">
                 <template #default="scope">
                     <!-- 之所以scope能看到所有attribute 是因为在调用search（）时已经把数据全部取回来了 -->
-                    <el-button type="primary" size="small" @click="openEdit(scope.row)">{{ t('emp.table.edit') }}</el-button>
-                    <el-button type="danger" size="small" @click="deleteEmp(scope.row)">{{ t('emp.table.delete') }}</el-button>
+                    <el-button type="primary" size="small" @click="openEdit(scope.row)">{{ t('emp.table.edit')
+                        }}</el-button>
+                    <el-button type="danger" size="small" @click="deleteEmp(scope.row)">{{ t('emp.table.delete')
+                        }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -453,7 +465,8 @@ let handleSelectionChange = (selection) => {
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item :label="t('emp.dialog.gender')" prop="gender">
-                            <el-select v-model="empForm.gender" :placeholder="t('emp.dialog.genderPlaceholder')" style="width: 100%">
+                            <el-select v-model="empForm.gender" :placeholder="t('emp.dialog.genderPlaceholder')"
+                                style="width: 100%">
                                 <el-option :label="t('emp.dialog.male')" :value="1" />
                                 <el-option :label="t('emp.dialog.female')" :value="2" />
                             </el-select>
@@ -469,8 +482,10 @@ let handleSelectionChange = (selection) => {
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item :label="t('emp.dialog.position')" prop="job">
-                            <el-select v-model="empForm.job" :placeholder="t('emp.dialog.positionPlaceholder')" style="width: 100%">
-                                <el-option v-for="job in jobs" :key="job.value" :label="t(job.name)" :value="job.value" />
+                            <el-select v-model="empForm.job" :placeholder="t('emp.dialog.positionPlaceholder')"
+                                style="width: 100%">
+                                <el-option v-for="job in jobs" :key="job.value" :label="t(job.name)"
+                                    :value="job.value" />
 
                             </el-select>
                         </el-form-item>
@@ -478,7 +493,8 @@ let handleSelectionChange = (selection) => {
 
                     <el-col :span="12">
                         <el-form-item :label="t('emp.dialog.salary')" prop="salary">
-                            <el-input v-model="empForm.salary" type="number" :placeholder="t('emp.dialog.salaryPlaceholder')" />
+                            <el-input v-model="empForm.salary" type="number"
+                                :placeholder="t('emp.dialog.salaryPlaceholder')" />
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -486,7 +502,8 @@ let handleSelectionChange = (selection) => {
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item :label="t('emp.dialog.dept')" prop="deptId">
-                            <el-select v-model="empForm.deptId" :placeholder="t('emp.dialog.deptPlaceholder')" style="width: 100%">
+                            <el-select v-model="empForm.deptId" :placeholder="t('emp.dialog.deptPlaceholder')"
+                                style="width: 100%">
                                 <el-option v-for="d in depts" :key="d.id" :label="d.name" :value="d.id" />
                             </el-select>
 
@@ -533,7 +550,9 @@ let handleSelectionChange = (selection) => {
                         <el-col :span="10">
                             <el-form-item :label="t('emp.dialog.workExprDate')" label-width="80px" size="small">
                                 <el-date-picker v-model="item.date" type="daterange" value-format="YYYY-MM-DD"
-                                    :range-separator="t('emp.dialog.to')" :start-placeholder="t('emp.dialog.workExprStartDatePlaceholder')" :end-placeholder="t('emp.dialog.workExprEndDatePlaceholder')" size="small" />
+                                    :range-separator="t('emp.dialog.to')"
+                                    :start-placeholder="t('emp.dialog.workExprStartDatePlaceholder')"
+                                    :end-placeholder="t('emp.dialog.workExprEndDatePlaceholder')" size="small" />
                             </el-form-item>
                         </el-col>
 
