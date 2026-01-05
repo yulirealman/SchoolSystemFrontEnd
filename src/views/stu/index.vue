@@ -50,15 +50,23 @@ const stuForm = ref({
     graduationDate: '',
 });
 const rules = {
-    name: [{ required: true, message: t("stu.dialog.nameRule"), min: 2, max: 20 }],
-    no: [{ required: true, message: t("stu.dialog.noRule") }],
-    phone: [{ required: true, message: t("stu.dialog.phoneRule") }],
-    gender: [{ required: true, message: t("stu.dialog.genderRule") }],
-    idCard: [{ required: true, message: t("stu.dialog.idCardRule") }],
-    isCollege: [{ required: true, message: t("stu.dialog.isCollegeRule") }],
-    clazzId: [{ required: true, message: t("stu.dialog.clazzRule") }],
+  name: [
+    {
+      required: true,
+      min: 2,
+      max: 20,
+      message: () => t("stu.dialog.nameRule"),
+      trigger: 'blur'
+    }
+  ],
+  no: [{ required: true, message: () => t("stu.dialog.noRule") }],
+  phone: [{ required: true, message: () => t("stu.dialog.phoneRule") }],
+  gender: [{ required: true, message: () => t("stu.dialog.genderRule") }],
+  idCard: [{ required: true, message: () => t("stu.dialog.idCardRule") }],
+  isCollege: [{ required: true, message: () => t("stu.dialog.isCollegeRule") }],
+  clazzId: [{ required: true, message: () => t("stu.dialog.clazzRule") }],
+}
 
-};
 let handleSelectionChange = (selection) => {
     selectedStus.value = selection.map(item => item.id);
 };

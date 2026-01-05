@@ -160,14 +160,14 @@ const clazzForm = ref({
 // 表单校验规则
 // ---------------------------
 const rules = {
-    name: [{ required: true, message: t("clazz.rule.requiredName") }],
-    room: [{ required: false, message: t("clazz.rule.notRequiredRoom") }],
-    beginDate: [{ required: true, message: t("clazz.rule.requiredBeginDate") }],
-    endDate: [{ required: true, message: t("clazz.rule.requiredEndDate") }],
-    masterId: [{ required: false, message: t("clazz.rule.notRequiredMasterId") }],
-    subject: [{ required: true, message: t("clazz.rule.requiredSubject") }],
+  name: [{ required: true, message: () => t("clazz.rule.requiredName") }],
+  room: [{ required: false, message: () => t("clazz.rule.notRequiredRoom") }],
+  beginDate: [{ required: true, message: () => t("clazz.rule.requiredBeginDate") }],
+  endDate: [{ required: true, message: () => t("clazz.rule.requiredEndDate") }],
+  masterId: [{ required: false, message: () => t("clazz.rule.notRequiredMasterId") }],
+  subject: [{ required: true, message: () => t("clazz.rule.requiredSubject") }]
+}
 
-};
 
 
 

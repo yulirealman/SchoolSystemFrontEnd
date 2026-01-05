@@ -140,12 +140,20 @@ const empForm = ref({
 // 表单校验规则
 // ---------------------------
 const rules = {
-    username: [{ required: true, message: t("emp.dialog.usernameRule"), min: 2, max: 20 }],
-    name: [{ required: true, message: t("emp.dialog.nameRule"), min: 2, max: 20 }],
-    phone: [{ required: true, message: t("emp.dialog.phoneRule") }],
-    gender: [{ required: true, message: t("emp.dialog.genderRule") }],
+  username: [
+    { required: true, min: 2, max: 20, message: () => t("emp.dialog.usernameRule") }
+  ],
+  name: [
+    { required: true, min: 2, max: 20, message: () => t("emp.dialog.nameRule") }
+  ],
+  phone: [
+    { required: true, message: () => t("emp.dialog.phoneRule") }
+  ],
+  gender: [
+    { required: true, message: () => t("emp.dialog.genderRule") }
+  ]
+}
 
-};
 
 
 // ---------------------------
