@@ -149,6 +149,8 @@
       "gender": "性别",
       "genderPlaceholder": "请选择性别",
       "genderRule": "性别不能为空",
+      "male": "男",
+      "female": "女",
 
       "phone": "手机号",
       "phonePlaceholder": "请输入手机号",
@@ -178,8 +180,22 @@
       "true": "是",
       "false": "否",
       "formValidatedFail": "表单验证失败，请检查输入项",
+      "save": "保存",
+      "cancel": "取消",
       "saveSuccess": "保存成功",
       "saveFail": "保存失败："
+    },
+    "batchDelete":{
+      "title":"提示",
+      "batchDelete": "批量删除",
+      "alertMessage": "请选择要删除的学员",
+      "confirmMessage": "确定要删除选中的学员吗？",
+      "cancel": "取消",
+      "confirm": "确认",
+      "deleteSuccess": "批量删除成功",
+      "deleteFail": "批量删除失败",
+      "cancelMessage": "批量删除已取消"
+
     }
   },
   "dept": {

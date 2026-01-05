@@ -84,7 +84,7 @@ const clear = () => {
 }
 
 const addStu = () => {
-    dialogFormTitle.value = "新增学员";
+    dialogFormTitle.value = t('stu.dialog.titleAdd');
 
     if (dialogFormRef.value) {
         dialogFormRef.value.resetFields();
@@ -96,7 +96,7 @@ const addStu = () => {
 }
 
 const openEdit = async (row) => {
-    dialogFormTitle.value = "编辑学员";
+    dialogFormTitle.value = t('stu.dialog.titleEdit');
     if (dialogFormRef.value) {
         dialogFormRef.value.resetFields();
     }
@@ -143,29 +143,29 @@ const deleteStu = async (row) => {
 const deleteStuBatch = async (ids) => {
     // 先算要显示的 message
     if (ids.length === 0) {
-        ElMessage.error("请选择要删除的员工");
+        ElMessage.error(t("stu.batchDelete.alertMessage"));
         return;
     }
-    const message = `确定要删除选中的 ${ids.length} 个员工吗？`
+    const message = t("stu.batchDelete.confirmMessage");
 
-    ElMessageBox.confirm(message, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+    ElMessageBox.confirm(message, t("stu.batchDelete.title"), {
+        confirmButtonText: t("stu.batchDelete.confirm"),
+        cancelButtonText: t("stu.batchDelete.cancel"),
         type: 'warning',
     })
         .then(async () => {
             const result = await deleteStuByIdApi(ids);
             if (result.code === 1) {
-                ElMessage.success('删除成功');
+                ElMessage.success(t("stu.batchDelete.deleteSuccess"));
                 search();
             } else {
-                ElMessage.error("删除失败：" + result.msg);
+                ElMessage.error(t("stu.batchDelete.deleteFail"));
             }
         })
         .catch(() => {
             ElMessage({
                 type: 'info',
-                message: '删除取消',
+                message: t("stu.batchDelete.cancelMessage"),
             })
         })
 };
@@ -283,15 +283,15 @@ const submit = async () => {
             }
 
             if (result.code === 1) {
-                ElMessage.success('保存成功');
+                ElMessage.success(t('stu.dialog.saveSuccess'));
                 dialogFormVisible.value = false;
                 search();
             } else {
-                ElMessage.error("保存失败：" + result.msg);
+                ElMessage.error(t('stu.dialog.saveFail') + result.msg);
             }
 
         } else {
-            ElMessage.error("表单验证失败，请检查输入项");
+            ElMessage.error(t('stu.dialog.formValidatedFail'));
         }
     });
 
@@ -338,8 +338,8 @@ onMounted(() => {
     </div>
     <!-- 新增刪除按鍵 -->
     <div class="container">
-        <el-button type="success" @click="addStu()">+ 新增学员</el-button>
-        <el-button type="danger" @click="deleteStuBatch(selectedStus)">- 批量删除</el-button>
+        <el-button type="success" @click="addStu()">+ {{ t('stu.dialog.button') }}</el-button>
+        <el-button type="danger" @click="deleteStuBatch(selectedStus)">- {{ t('stu.batchDelete.batchDelete') }}</el-button>
 
     </div>
 
@@ -404,66 +404,45 @@ onMounted(() => {
 
                 <el-row :gutter="20">
                     <el-col :span="12">
-                        <el-form-item label="姓名" prop="name">
-                            <el-input v-model="stuForm.name" placeholder="请输入学员姓名" />
+                        <el-form-item :label="t('stu.dialog.name')" prop="name">
+                            <el-input v-model="stuForm.name" :placeholder="t('stu.dialog.namePlaceholder')" />
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="学号" prop="no">
-                            <el-input v-model="stuForm.no" placeholder="请输入学员学号" />
+                        <el-form-item :label="t('stu.dialog.no')" prop="no">
+                            <el-input v-model="stuForm.no" :placeholder="t('stu.dialog.noPlaceholder')" />
                         </el-form-item>
                     </el-col>
                 </el-row>
 
                 <el-row :gutter="20">
                     <el-col :span="12">
-                        <el-form-item label="性别" prop="gender">
-                            <el-select v-model="stuForm.gender" placeholder="请选择性别" style="width: 100%">
-                                <el-option label="男" :value="1" />
-                                <el-option label="女" :value="2" />
+                        <el-form-item :label="t('stu.dialog.gender')" prop="gender">
+                            <el-select v-model="stuForm.gender" :placeholder="t('stu.dialog.genderPlaceholder')" style="width: 100%">
+                                <el-option :label="t('stu.dialog.male')" :value="1" />
+                                <el-option :label="t('stu.dialog.female')" :value="2" />
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="手机号" prop="phone">
-                            <el-input v-model="stuForm.phone" placeholder="请输入手机号" />
+                        <el-form-item :label="t('stu.dialog.phone')" prop="phone">
+                            <el-input v-model="stuForm.phone" :placeholder="t('stu.dialog.phonePlaceholder')" />
                         </el-form-item>
                     </el-col>
                 </el-row>
 
                 <el-row :gutter="20">
                     <el-col :span="12">
-                        <el-form-item label="身份证号" prop="idCard">
-                            <el-input v-model="stuForm.idCard" placeholder="请输入身份证号" />
+                        <el-form-item :label="t('stu.dialog.idCard')" prop="idCard">
+                            <el-input v-model="stuForm.idCard" :placeholder="t('stu.dialog.idCardPlaceholder')" />
                         </el-form-item>
                     </el-col>
 
                     <el-col :span="12">
-                        <el-form-item label="是否院校" prop="isCollege">
-                            <el-select v-model="stuForm.isCollege" placeholder="请选择是否院校学院" style="width: 100%">
-                                <el-option label="是" :value="1" />
-                                <el-option label="否" :value="0" />
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-
-                <el-row :gutter="20">
-                    <el-col :span="12">
-                        <el-form-item label="联系地址" prop="address">
-                            <el-input v-model="stuForm.address" placeholder="请输入联系地址" />
-                        </el-form-item>
-                    </el-col>
-
-                    <el-col :span="12">
-                        <el-form-item label="最高学历" prop="degree">
-                            <el-select v-model="stuForm.degree" placeholder="请选择最高学历" style="width: 100%">
-                                <el-option label="初中" :value="1" />
-                                <el-option label="高中" :value="2" />
-                                <el-option label="大专" :value="3" />
-                                <el-option label="本科" :value="4" />
-                                <el-option label="硕士" :value="5" />
-                                <el-option label="博士" :value="6" />
+                        <el-form-item :label="t('stu.dialog.isCollege')" prop="isCollege">
+                            <el-select v-model="stuForm.isCollege" :placeholder="t('stu.dialog.isCollegePlaceholder')" style="width: 100%">
+                                <el-option :label="t('stu.dialog.true')" :value="1" />
+                                <el-option :label="t('stu.dialog.false')" :value="0" />
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -471,15 +450,36 @@ onMounted(() => {
 
                 <el-row :gutter="20">
                     <el-col :span="12">
-                        <el-form-item label="毕业时间" prop="graduationDate">
+                        <el-form-item :label="t('stu.dialog.address')" prop="address">
+                            <el-input v-model="stuForm.address" :placeholder="t('stu.dialog.addressPlaceholder')" />
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="12">
+                        <el-form-item :label="t('stu.dialog.degree')" prop="degree">
+                            <el-select v-model="stuForm.degree" :placeholder="t('stu.dialog.degreePlaceholder')" style="width: 100%">
+                                <el-option :label="t('stu.inputArea.degrees.middleSchool')" :value="1" />
+                                <el-option :label="t('stu.inputArea.degrees.highSchool')" :value="2" />
+                                <el-option :label="t('stu.inputArea.degrees.college')" :value="3" />
+                                <el-option :label="t('stu.inputArea.degrees.bachelor')" :value="4" />
+                                <el-option :label="t('stu.inputArea.degrees.master')" :value="5" />
+                                <el-option :label="t('stu.inputArea.degrees.doctor')" :value="6" />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item :label="t('stu.dialog.graduationDate')" prop="graduationDate">
                             <el-date-picker type="date" v-model="stuForm.graduationDate" value-format="YYYY-MM-DD"
-                                placeholder="请选择毕业时间" style="width: 100%" />
+                                :placeholder="t('stu.dialog.graduationDatePlaceholder')" style="width: 100%" />
                         </el-form-item>
                     </el-col>
 
                     <el-col :span="12">
-                        <el-form-item label="班级" prop="clazzId">
-                            <el-select v-model="stuForm.clazzId" placeholder="请选择班级" style="width: 100%">
+                        <el-form-item :label="t('stu.dialog.clazz')" prop="clazzId">
+                            <el-select v-model="stuForm.clazzId" :placeholder="t('stu.dialog.clazzPlaceholder')" style="width: 100%">
                                 <el-option v-for="clazz in clazzList" :key="clazz.id" :label="clazz.name"
                                     :value="clazz.id" />
                             </el-select>
@@ -494,8 +494,8 @@ onMounted(() => {
 
             <!-- Footer -->
             <template #footer>
-                <el-button @click="dialogFormVisible = false">取消</el-button>
-                <el-button type="primary" @click="submit">保存</el-button>
+                <el-button @click="dialogFormVisible = false">{{ t('stu.dialog.cancel') }}</el-button>
+                <el-button type="primary" @click="submit">{{ t('stu.dialog.save') }}</el-button>
             </template>
         </el-dialog>
     </div>
