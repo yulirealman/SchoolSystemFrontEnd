@@ -137,46 +137,35 @@
       "button": "新增学员",
       "titleAdd": "新增学员",
       "titleEdit": "编辑学员",
-
       "name": "姓名",
       "namePlaceholder": "请输入姓名",
       "nameRule": "请输入学员姓名，2-20个字",
-
       "no": "学员编号",
       "noPlaceholder": "请输入学员编号",
       "noRule": "学号为必填选项",
-
       "gender": "性别",
       "genderPlaceholder": "请选择性别",
       "genderRule": "性别不能为空",
       "male": "男",
       "female": "女",
-
       "phone": "手机号",
       "phonePlaceholder": "请输入手机号",
       "phoneRule": "手机号不能为空",
-
       "idCard": "身份证号",
       "idCardPlaceholder": "请输入身份证号",
       "idCardRule": "身份证号不能为空",
-
       "isCollege": "是否统招",
       "isCollegePlaceholder": "请选择是否统招",
       "isCollegeRule": "是否统招不能为空",
-
       "address": "地址",
       "addressPlaceholder": "请输入地址",
-    
       "degree": "最高学历",
       "degreePlaceholder": "请选择最高学历",
-
       "graduationDate": "毕业日期",
       "graduationDatePlaceholder": "请选择毕业日期",
-
       "clazz": "所属班级",
       "clazzPlaceholder": "请选择所属班级",
       "clazzRule": "所属班级不能为空",
-
       "true": "是",
       "false": "否",
       "formValidatedFail": "表单验证失败，请检查输入项",
@@ -185,8 +174,8 @@
       "saveSuccess": "保存成功",
       "saveFail": "保存失败："
     },
-    "batchDelete":{
-      "title":"提示",
+    "batchDelete": {
+      "title": "提示",
       "batchDelete": "批量删除",
       "alertMessage": "请选择要删除的学员",
       "confirmMessage": "确定要删除选中的学员吗？",
@@ -195,7 +184,53 @@
       "deleteSuccess": "批量删除成功",
       "deleteFail": "批量删除失败",
       "cancelMessage": "批量删除已取消"
-
+    },
+    "table": {
+      "index": "序号",
+      "name": "姓名",
+      "no": "学号",
+      "clazz": "班级",
+      "gender": "性别",
+      "phone": "手机号",
+      "degree": "最高学历",
+      "violationCount": "违纪次数",
+      "violationScore": "违纪分数",
+      "lastUpdateTime": "最后操作时间",
+      "operation": "操作",
+      "edit": "编辑",
+      "delete": "删除",
+      "violation": "违纪",
+      "male": "男",
+      "female": "女",
+      "others": "其他",
+      "editOps": {
+        "querySuccessMessage": "获取学员信息成功",
+        "queryFailMessage": "获取学员信息失败："
+      },
+      "deleteOps": {
+        "title": "提示",
+        "delete": "删除",
+        "confirmMessage": "确定要删除学员{name}吗？",
+        "cancel": "取消",
+        "confirm": "确认",
+        "deleteSuccess": "删除成功",
+        "deleteFail": "删除失败：",
+        "cancelMessage": "删除已取消"
+      },
+      "violationOps": {
+        "title": "违规记录",
+        "violation": "违纪",
+        "confirmMessage": "确定要对学员{name}进行违纪处理吗？",
+        "cancel": "取消",
+        "confirm": "确认",
+        "violationSuccess": "违纪处理成功",
+        "violationFail": "违纪处理失败：",
+        "cancelMessage": "违纪处理已取消",
+        "formValidatedFail": "表单验证失败，请检查输入项",
+        "violationScoreRule": "必须是数字",
+        "violationPlaceholder": "请输入违纪分数",
+        "violationScore": "违纪分数"
+      }
     }
   },
   "dept": {
@@ -222,5 +257,6 @@
     "lengthLimit": "部门名称长度不能超过30个字符",
     "name": "部门名称",
     "prompt": "提示"
-  }
+  },
+  "login":{}
 }

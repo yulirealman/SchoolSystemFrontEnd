@@ -3,7 +3,7 @@ import { reactive, onMounted, ref } from 'vue'
 import { queryClazzPageApi } from '@/api/clazzs'
 import { queryStuPageApi, addStuApi, getStuByIdApi, updateStuApi, deleteStuByIdApi, updateViolationStuApi } from '@/api/stu'
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { useI18n } from 'vue-i18n'  
+import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const searchStu = ref({
@@ -50,13 +50,13 @@ const stuForm = ref({
     graduationDate: '',
 });
 const rules = {
-    name: [{ required: true, message: "请输入学员姓名，2-20个字", min: 2, max: 20 }],
-    no: [{ required: true, message: "学号为必填选项" }],
-    phone: [{ required: true, message: "手机号为必填选项" }],
-    gender: [{ required: true, message: "性别为必填选项" }],
-    idCard: [{ required: true, message: "身份证号为必填选项" }],
-    isCollege: [{ required: true, message: "是否院校学院为必填选项" }],
-    clazzId: [{ required: true, message: "班级为必填选项" }],
+    name: [{ required: true, message: t("stu.dialog.nameRule"), min: 2, max: 20 }],
+    no: [{ required: true, message: t("stu.dialog.noRule") }],
+    phone: [{ required: true, message: t("stu.dialog.phoneRule") }],
+    gender: [{ required: true, message: t("stu.dialog.genderRule") }],
+    idCard: [{ required: true, message: t("stu.dialog.idCardRule") }],
+    isCollege: [{ required: true, message: t("stu.dialog.isCollegeRule") }],
+    clazzId: [{ required: true, message: t("stu.dialog.clazzIdRule") }],
 
 };
 let handleSelectionChange = (selection) => {
@@ -106,9 +106,9 @@ const openEdit = async (row) => {
     const result = await getStuByIdApi(row.id);
     if (result.code === 1) {
         stuForm.value = result.data;
-        ElMessage.success("获取学员信息成功");
+        ElMessage.success(t("stu.table.editOps.querySuccessMessage"));
     } else {
-        ElMessage.error("获取学员信息失败：" + result.msg);
+        ElMessage.error(t("stu.table.editOps.queryFailMessage"));
     }
 };
 
@@ -116,25 +116,25 @@ const openEdit = async (row) => {
 
 const deleteStu = async (row) => {
     // 先算要显示的 message
-    const message = `确定要删除学员 ${row.name} 吗？`
-    ElMessageBox.confirm(message, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+    const message = t("stu.table.deleteOps.confirmMessage", { name: row.name });
+    ElMessageBox.confirm(message, t("stu.table.deleteOps.title"), {
+        confirmButtonText: t("stu.table.deleteOps.confirm"),
+        cancelButtonText: t("stu.table.deleteOps.cancel"),
         type: 'warning',
     })
         .then(async () => {
             const result = await deleteStuByIdApi(row.id);
             if (result.code === 1) {
-                ElMessage.success('删除成功');
+                ElMessage.success(t("stu.table.deleteOps.deleteSuccess"));
                 search();
             } else {
-                ElMessage.error("删除失败：" + result.msg);
+                ElMessage.error(t("stu.table.deleteOps.deleteFail"));
             }
         })
         .catch(() => {
             ElMessage({
                 type: 'info',
-                message: '删除取消',
+                message: t("stu.table.deleteOps.cancelMessage"),
             })
         })
 };
@@ -177,7 +177,7 @@ const openViolation = (row) => {
         dialogViolationFormRef.value.resetFields();
     }
     dialogViolationVisible.value = true;
-    dialogFormTitle.value = "违规记录";
+    dialogFormTitle.value = t("stu.table.violationOps.title");
     dialogViolationForm.value.id = row.id;
 
 };
@@ -193,24 +193,24 @@ const submitViolation = async () => {
             result = await updateViolationStuApi(dialogViolationForm.value);
 
             if (result.code === 1) {
-                ElMessage.success('保存成功');
+                ElMessage.success(t("stu.table.violationOps.violationSuccess"));
                 dialogViolationVisible.value = false;
 
                 search();
             } else {
-                ElMessage.error("保存失败：" + result.msg);
+                ElMessage.error(t("stu.table.violationOps.violationFail"));
             }
 
         } else {
-            ElMessage.error("表单验证失败，请检查输入项");
+            ElMessage.error(t("stu.table.violationOps.formValidatedFail"));
         }
     });
 
 }
 const violationRules = {
     violationScore: [
-        { required: true, message: '请输入违纪分数', trigger: 'blur' },
-        { pattern: /^\d+$/, message: '必须是数字', trigger: 'blur' }
+        { required: true, message: t("stu.table.violationOps.violationPlaceholder"), trigger: 'blur' },
+        { pattern: /^\d+$/, message: t("stu.table.violationOps.violationScoreRule"), trigger: 'blur' }
     ]
 };
 
@@ -339,7 +339,8 @@ onMounted(() => {
     <!-- 新增刪除按鍵 -->
     <div class="container">
         <el-button type="success" @click="addStu()">+ {{ t('stu.dialog.button') }}</el-button>
-        <el-button type="danger" @click="deleteStuBatch(selectedStus)">- {{ t('stu.batchDelete.batchDelete') }}</el-button>
+        <el-button type="danger" @click="deleteStuBatch(selectedStus)">- {{ t('stu.batchDelete.batchDelete')
+            }}</el-button>
 
     </div>
 
@@ -348,37 +349,46 @@ onMounted(() => {
         <el-table :data="stuList" border style="width: 100%" @selection-change="handleSelectionChange">
 
             <el-table-column type="selection" width="55" align="center" />
-            <el-table-column prop="name" label="姓名" width="90" align="center" />
-            <el-table-column prop="no" label="学号" width="120" align="center" />
-            <el-table-column prop="clazzName" label="班级" width="130" align="center" />
+            <el-table-column prop="name" :label="t('stu.table.name')" width="90" align="center" />
+            <el-table-column prop="no" :label="t('stu.table.no')" width="120" align="center" />
+            <el-table-column prop="clazzName" :label="t('stu.table.clazz')" width="130" align="center" />
 
-            <el-table-column label="性别" width="80" align="center">
+            <el-table-column :label="t('stu.table.gender')" width="80" align="center">
                 <template #default="scope">
-                    {{ scope.row.gender == 1 ? '男' : '女' }}
+                    {{ scope.row.gender == 1 ? t('stu.table.male') : t('stu.table.female') }}
                 </template>
             </el-table-column>
 
-            <el-table-column prop="phone" label="手机号" width="120" align="center" />
+            <el-table-column prop="phone" :label="t('stu.table.phone')" width="120" align="center" />
 
-            <el-table-column prop="degree" label="最高学历" width="90" align="center">
+            <el-table-column :label="t('stu.table.degree')" width="90" align="center">
                 <template #default="{ row }">
                     <span>
-                        {{degrees.find(degree => degree.value === row.degree)?.name || '其他'}}
+                        {{
+                            t(
+                                degrees.find(d => d.value === row.degree)?.name
+                        || 'stu.table.others'
+                        )
+                        }}
                     </span>
+
                 </template>
             </el-table-column>
 
-            <el-table-column prop="violationCount" label="违纪次数" width="90" align="center" />
-            <el-table-column prop="violationScore" label="违纪扣分" width="90" align="center" />
+            <el-table-column prop="violationCount" :label="t('stu.table.violationCount')" width="90" align="center" />
+            <el-table-column prop="violationScore" :label="t('stu.table.violationScore')" width="90" align="center" />
 
 
-            <el-table-column prop="updateTime" label="最后操作时间" width="150" align="center" />
-            <el-table-column label="操作" align="center">
+            <el-table-column prop="updateTime" :label="t('stu.table.lastUpdateTime')" width="150" align="center" />
+            <el-table-column :label="t('stu.table.operation')" align="center">
                 <template #default="scope">
                     <!-- 之所以scope能看到所有attribute 是因为在调用search（）时已经把数据全部取回来了 -->
-                    <el-button type="primary" size="small" @click="openEdit(scope.row)">编辑</el-button>
-                    <el-button type="warning" size="small" @click="openViolation(scope.row)">违纪</el-button>
-                    <el-button type="danger" size="small" @click="deleteStu(scope.row)">删除</el-button>
+                    <el-button type="primary" size="small" @click="openEdit(scope.row)">{{ t('stu.table.edit')
+                        }}</el-button>
+                    <el-button type="warning" size="small" @click="openViolation(scope.row)">{{ t('stu.table.violation')
+                        }}</el-button>
+                    <el-button type="danger" size="small" @click="deleteStu(scope.row)">{{ t('stu.table.delete')
+                        }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -418,7 +428,8 @@ onMounted(() => {
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item :label="t('stu.dialog.gender')" prop="gender">
-                            <el-select v-model="stuForm.gender" :placeholder="t('stu.dialog.genderPlaceholder')" style="width: 100%">
+                            <el-select v-model="stuForm.gender" :placeholder="t('stu.dialog.genderPlaceholder')"
+                                style="width: 100%">
                                 <el-option :label="t('stu.dialog.male')" :value="1" />
                                 <el-option :label="t('stu.dialog.female')" :value="2" />
                             </el-select>
@@ -440,7 +451,8 @@ onMounted(() => {
 
                     <el-col :span="12">
                         <el-form-item :label="t('stu.dialog.isCollege')" prop="isCollege">
-                            <el-select v-model="stuForm.isCollege" :placeholder="t('stu.dialog.isCollegePlaceholder')" style="width: 100%">
+                            <el-select v-model="stuForm.isCollege" :placeholder="t('stu.dialog.isCollegePlaceholder')"
+                                style="width: 100%">
                                 <el-option :label="t('stu.dialog.true')" :value="1" />
                                 <el-option :label="t('stu.dialog.false')" :value="0" />
                             </el-select>
@@ -457,7 +469,8 @@ onMounted(() => {
 
                     <el-col :span="12">
                         <el-form-item :label="t('stu.dialog.degree')" prop="degree">
-                            <el-select v-model="stuForm.degree" :placeholder="t('stu.dialog.degreePlaceholder')" style="width: 100%">
+                            <el-select v-model="stuForm.degree" :placeholder="t('stu.dialog.degreePlaceholder')"
+                                style="width: 100%">
                                 <el-option :label="t('stu.inputArea.degrees.middleSchool')" :value="1" />
                                 <el-option :label="t('stu.inputArea.degrees.highSchool')" :value="2" />
                                 <el-option :label="t('stu.inputArea.degrees.college')" :value="3" />
@@ -479,7 +492,8 @@ onMounted(() => {
 
                     <el-col :span="12">
                         <el-form-item :label="t('stu.dialog.clazz')" prop="clazzId">
-                            <el-select v-model="stuForm.clazzId" :placeholder="t('stu.dialog.clazzPlaceholder')" style="width: 100%">
+                            <el-select v-model="stuForm.clazzId" :placeholder="t('stu.dialog.clazzPlaceholder')"
+                                style="width: 100%">
                                 <el-option v-for="clazz in clazzList" :key="clazz.id" :label="clazz.name"
                                     :value="clazz.id" />
                             </el-select>
@@ -508,8 +522,8 @@ onMounted(() => {
 
                 <el-row :gutter="24">
                     <el-col :span="24">
-                        <el-form-item label="请输入违纪分数" prop="violationScore">
-                            <el-input v-model="dialogViolationForm.violationScore" placeholder="请输入违纪分数" />
+                        <el-form-item :label="t('stu.table.violationOps.violationScore')" prop="violationScore">
+                            <el-input v-model="dialogViolationForm.violationScore" :placeholder="t('stu.table.violationOps.violationPlaceholder')" />
                         </el-form-item>
                     </el-col>
 
@@ -518,8 +532,8 @@ onMounted(() => {
 
             <!-- Footer -->
             <template #footer>
-                <el-button @click="dialogViolationVisible = false">取消</el-button>
-                <el-button type="primary" @click="submitViolation">保存</el-button>
+                <el-button @click="dialogViolationVisible = false">{{ t('stu.table.violationOps.cancel') }}</el-button>
+                <el-button type="primary" @click="submitViolation">{{ t('stu.table.violationOps.confirm') }}</el-button>
             </template>
         </el-dialog>
     </div>
