@@ -56,7 +56,7 @@ const rules = {
     gender: [{ required: true, message: t("stu.dialog.genderRule") }],
     idCard: [{ required: true, message: t("stu.dialog.idCardRule") }],
     isCollege: [{ required: true, message: t("stu.dialog.isCollegeRule") }],
-    clazzId: [{ required: true, message: t("stu.dialog.clazzIdRule") }],
+    clazzId: [{ required: true, message: t("stu.dialog.clazzRule") }],
 
 };
 let handleSelectionChange = (selection) => {
