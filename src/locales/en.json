@@ -257,5 +257,23 @@
     "lengthLimit": "Department name length must be less than 30 characters",
     "name": "Department Name",
     "prompt": "Warning"
+  },
+  "login": {
+    "title": "School System Login",
+    "username": "Username",
+    "usernamePlaceholder": "Enter username",
+    "password": "Password",
+    "passwordPlaceholder": "Enter password",
+    "login": "Sign In",
+    "clear": "Clear",
+    "loginSuccess": "Login successful",
+    "loginFail": "Login failed. Please check your username or password."
+  },
+  "logout": {
+    "title": "Sign Out",
+    "confirm": "Are you sure you want to sign out?",
+    "confirmButton": "Confirm",
+    "cancelButton": "Cancel",
+    "logoutCancel": "Sign out canceled"
   }
 }

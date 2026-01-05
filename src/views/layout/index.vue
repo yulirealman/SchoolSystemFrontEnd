@@ -42,16 +42,16 @@ onMounted(() => {
 })
 
 const logout = () => {
-  ElMessageBox.confirm('确认退出登录吗？', '提示', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
+  ElMessageBox.confirm(t('logout.confirm'), t('logout.title'), {
+    confirmButtonText: t('logout.confirmButton'),
+    cancelButtonText: t('logout.cancelButton'),
     type: 'warning',
   }).then(() => {
     localStorage.removeItem("loginUser");
     location.href = "/login";
   }).catch(() => {
     // 取消操作
-    ElMessage.info('已取消退出登录');
+    ElMessage.info(t('logout.logoutCancel'));
   });
 }
 </script>

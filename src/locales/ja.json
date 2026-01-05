@@ -257,5 +257,23 @@
     "lengthLimit": "部門名は30文字以下で入力してください",
     "name": "部門名",
     "prompt": "警告"
+  },
+  "login": {
+    "title": "学校システムログイン",
+    "username": "ユーザーID",
+    "usernamePlaceholder": "ユーザーIDを入力してください",
+    "password": "パスワード",
+    "passwordPlaceholder": "パスワードを入力してください",
+    "login": "ログイン",
+    "clear": "クリア",
+    "loginSuccess": "ログインしました",
+    "loginFail": "ログインに失敗しました。IDまたはパスワードを確認してください"
+  },
+  "logout": {
+    "title": "ログアウト",
+    "confirm": "ログアウトしますか？",
+    "confirmButton": "確認",
+    "cancelButton": "キャンセル",
+    "logoutCancel": "ログアウトをキャンセルしました"
   }
 }

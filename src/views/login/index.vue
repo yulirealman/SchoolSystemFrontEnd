@@ -1,41 +1,10 @@
-<template>
-  <div class="login-container">
-    <div class="login-box">
-      <h2 class="title">学校系统登录</h2>
-
-      <el-form :model="form" label-width="60px">
-        <!-- 账号输入 -->
-        <el-form-item label="账号">
-          <el-input v-model="form.username" placeholder="请输入账号" />
-        </el-form-item>
-
-        <!-- 密码输入 -->
-        <el-form-item label="密码">
-          <el-input
-            v-model="form.password"
-            type="password"
-            show-password
-            placeholder="请输入密码"
-          />
-        </el-form-item>
-
-        <!-- 按钮组 -->
-        <el-form-item>
-          <div class="button-group">
-            <el-button type="primary" @click="handleLogin">登录</el-button>
-            <el-button type="info" @click="clearForm">清空</el-button>
-          </div>
-        </el-form-item>
-      </el-form>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { loginApi } from "@/api/login";
 import { ElMessage } from "element-plus";
+import { useI18n } from 'vue-i18n'  
+const { t } = useI18n()
 const form = ref({
   username: "",
   password: ""
@@ -45,14 +14,14 @@ const router = useRouter();
 const handleLogin = async () => {
   const result = await loginApi(form.value);
   if(result.code){
-    ElMessage.success("登录成功");
+    ElMessage.success(t("login.loginSuccess"));
 
     localStorage.setItem("loginUser",JSON.stringify(result.data));
 
     router.push("/index");
 
   }else{
-    ElMessage.error("登录失败，请检查账号或密码");
+    ElMessage.error(t("login.loginFail"));
   }
   // 这里可以加 axios 请求登录
 };
@@ -63,6 +32,41 @@ const clearForm = () => {
   form.value.password = "";
 };
 </script>
+
+
+<template>
+  <div class="login-container">
+    <div class="login-box">
+      <h2 class="title">{{ t("login.title") }}</h2>
+
+      <el-form :model="form" label-width="60px">
+        <!-- 账号输入 -->
+        <el-form-item :label="t('login.username')">
+          <el-input v-model="form.username" :placeholder="t('login.usernamePlaceholder')" />
+        </el-form-item>
+
+        <!-- 密码输入 -->
+        <el-form-item :label="t('login.password')">
+          <el-input
+            v-model="form.password"
+            type="password"
+            show-password
+            :placeholder="t('login.passwordPlaceholder')"
+          />
+        </el-form-item>
+
+        <!-- 按钮组 -->
+        <el-form-item>
+          <div class="button-group">
+            <el-button type="primary" @click="handleLogin"> {{ t("login.login") }}</el-button>
+            <el-button type="info" @click="clearForm"> {{ t("login.clear") }}</el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+    </div>
+  </div>
+</template>
+
 
 <style scoped>
 .login-container {
