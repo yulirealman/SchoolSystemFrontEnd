@@ -3,6 +3,8 @@ import { reactive, onMounted, ref } from 'vue'
 import { queryClazzPageApi } from '@/api/clazzs'
 import { queryStuPageApi, addStuApi, getStuByIdApi, updateStuApi, deleteStuByIdApi, updateViolationStuApi } from '@/api/stu'
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { useI18n } from 'vue-i18n'  
+const { t } = useI18n()
 
 const searchStu = ref({
     name: '',
@@ -10,12 +12,12 @@ const searchStu = ref({
     clazzId: '',
 })
 const degrees = [
-    { name: '初中', value: 1 },
-    { name: '高中', value: 2 },
-    { name: '大专', value: 3 },
-    { name: '本科', value: 4 },
-    { name: '硕士', value: 5 },
-    { name: '博士', value: 6 },
+    { name: 'stu.inputArea.degrees.middleSchool', value: 1 },
+    { name: 'stu.inputArea.degrees.highSchool', value: 2 },
+    { name: 'stu.inputArea.degrees.college', value: 3 },
+    { name: 'stu.inputArea.degrees.bachelor', value: 4 },
+    { name: 'stu.inputArea.degrees.master', value: 5 },
+    { name: 'stu.inputArea.degrees.doctor', value: 6 },
 ];
 const dialogViolationFormRef = ref();
 const dialogViolationForm = ref({
@@ -307,30 +309,30 @@ onMounted(() => {
 
 
 <template>
-    <h1>学员管理</h1>
+    <h1>{{ t('stu.title') }}</h1>
     <div class="container">
 
         <el-form :inline="true" :model="searchStu">
-            <el-form-item label="姓名">
-                <el-input v-model="searchStu.name" placeholder="请输入姓名" />
+            <el-form-item :label="t('stu.inputArea.name')">
+                <el-input v-model="searchStu.name" :placeholder="t('stu.inputArea.namePlaceholder')" />
             </el-form-item>
 
-            <el-form-item label="最高学历">
-                <el-select v-model="searchStu.degree" placeholder="请选择最高学历" clearable>
-                    <el-option v-for="item in degrees" :key="item.value" :label="item.name" :value="item.value" />
+            <el-form-item :label="t('stu.inputArea.degree')">
+                <el-select v-model="searchStu.degree" :placeholder="t('stu.inputArea.degreePlaceholder')" clearable>
+                    <el-option v-for="item in degrees" :key="item.value" :label="t(item.name)" :value="item.value" />
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="所属班级">
-                <el-select v-model="searchStu.clazzId" placeholder="请选择所属班级" clearable>
+            <el-form-item :label="t('stu.inputArea.clazz')">
+                <el-select v-model="searchStu.clazzId" :placeholder="t('stu.inputArea.clazzPlaceholder')" clearable>
                     <el-option v-for="item in clazzList" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
             </el-form-item>
 
 
             <el-form-item>
-                <el-button type="primary" @click="search">查询</el-button>
-                <el-button type="info" @click="clear">清空</el-button>
+                <el-button type="primary" @click="search">{{ t('stu.inputArea.search') }}</el-button>
+                <el-button type="info" @click="clear">{{ t('stu.inputArea.clear') }}</el-button>
             </el-form-item>
         </el-form>
     </div>

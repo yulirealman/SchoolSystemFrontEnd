@@ -16,8 +16,8 @@ import jaMsg from '@/locales/ja.json'
 const app = createApp(App)
 
 const i18n = createI18n({
-  locale: 'zh',
-  fallbackLocale: 'zh',
+  locale: 'en',
+  fallbackLocale: 'en',
   messages: {
     en: enMsg,
     ja: jaMsg,

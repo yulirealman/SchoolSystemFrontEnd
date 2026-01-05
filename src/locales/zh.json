@@ -96,24 +96,90 @@
       "delete": "删除",
       "messageSuccess": "获取班级信息成功",
       "messageFail": "获取班级信息失败：",
-
       "confirmButton": "确定",
       "cancelButton": "取消",
-      "deleteTitle":"提示",
+      "deleteTitle": "提示",
       "deleteConfirm": "确定要删除",
       "messageDeleteSuccess": "删除成功",
       "messageDeleteCancel": "删除已取消",
       "messageFailDelete": "删除失败：对不起, 该班级下有学生, 不能直接删除"
     },
-    "rule":{
+    "rule": {
       "requiredName": "班级名称不能为空",
-      "notRequiredRoom":"请输入班级教室",
+      "notRequiredRoom": "请输入班级教室",
       "requiredBeginDate": "开课日期不能为空",
       "requiredEndDate": "结课日期不能为空",
       "notRequiredMasterId": "请选择教师",
       "requiredSubject": "学科不能为空"
+    }
+  },
+  "stu": {
+    "title": "学员管理",
+    "inputArea": {
+      "name": "姓名",
+      "namePlaceholder": "请输入姓名",
+      "degree": "最高学历",
+      "degreePlaceholder": "请选择最高学历",
+      "clazz": "所属班级",
+      "clazzPlaceholder": "请选择所属班级",
+      "search": "查询",
+      "clear": "清空",
+      "degrees": {
+        "middleSchool": "初中",
+        "highSchool": "高中",
+        "college": "大专",
+        "bachelor": "本科",
+        "master": "硕士",
+        "doctor": "博士"
+      }
+    },
+    "dialog": {
+      "button": "新增学员",
+      "titleAdd": "新增学员",
+      "titleEdit": "编辑学员",
 
+      "name": "姓名",
+      "namePlaceholder": "请输入姓名",
+      "nameRule": "请输入学员姓名，2-20个字",
 
+      "no": "学员编号",
+      "noPlaceholder": "请输入学员编号",
+      "noRule": "学号为必填选项",
+
+      "gender": "性别",
+      "genderPlaceholder": "请选择性别",
+      "genderRule": "性别不能为空",
+
+      "phone": "手机号",
+      "phonePlaceholder": "请输入手机号",
+      "phoneRule": "手机号不能为空",
+
+      "idCard": "身份证号",
+      "idCardPlaceholder": "请输入身份证号",
+      "idCardRule": "身份证号不能为空",
+
+      "isCollege": "是否统招",
+      "isCollegePlaceholder": "请选择是否统招",
+      "isCollegeRule": "是否统招不能为空",
+
+      "address": "地址",
+      "addressPlaceholder": "请输入地址",
+    
+      "degree": "最高学历",
+      "degreePlaceholder": "请选择最高学历",
+
+      "graduationDate": "毕业日期",
+      "graduationDatePlaceholder": "请选择毕业日期",
+
+      "clazz": "所属班级",
+      "clazzPlaceholder": "请选择所属班级",
+      "clazzRule": "所属班级不能为空",
+
+      "true": "是",
+      "false": "否",
+      "formValidatedFail": "表单验证失败，请检查输入项",
+      "saveSuccess": "保存成功",
+      "saveFail": "保存失败："
     }
   },
   "dept": {

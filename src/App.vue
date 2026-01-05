@@ -10,7 +10,7 @@ import ja from 'element-plus/es/locale/lang/ja'
 const { locale: i18nLocale } = useI18n()
 
 // 2️⃣ 建立 Element Plus 的響應式 locale
-const elementLocale = ref(zhCn)
+const elementLocale = ref(en)
 
 // 3️⃣ 語言映射表
 const elementLocales = { zh: zhCn, en: en, ja: ja }
@@ -18,7 +18,7 @@ const elementLocales = { zh: zhCn, en: en, ja: ja }
 // 4️⃣ 監聽 i18n 語言變化，動態更新 Element Plus
 watch(i18nLocale, (newLang) => {
     console.log('i18nLocale: ', newLang)
-  elementLocale.value = elementLocales[newLang] || zhCn 
+  elementLocale.value = elementLocales[newLang] || en 
 })
 </script>
 
