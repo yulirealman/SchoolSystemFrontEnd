@@ -4,7 +4,7 @@
 
 <template>
     <div>
-        员工管理123
+        officially implemented ci/cd for frontend 
     </div>
 </template>
 
