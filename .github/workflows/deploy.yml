@@ -33,4 +33,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "dist/*"
           target: "/root/schoolsystem-nginx/html"
-          rm: true
+          rm: false
