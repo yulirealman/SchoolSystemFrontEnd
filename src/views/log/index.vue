@@ -4,7 +4,7 @@
 
 <template>
     <div>
-        log统计
+        log统计123
     </div>
 </template>
 
