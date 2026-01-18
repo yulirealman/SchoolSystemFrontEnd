@@ -1,6 +1,9 @@
 # SchoolSystemFrontEnd
 
 This template should help get you started developing with Vue 3 in Vite.
+http://120.26.253.248/index
+test
+123456
 
 ## Recommended IDE Setup
 
