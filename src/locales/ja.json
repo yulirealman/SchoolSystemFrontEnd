@@ -386,5 +386,15 @@
         "cancelMessage": "削除をキャンセルしました"
       }
     }
+  },
+  "log": {
+    "title": "ログ管理",
+    "operator": "操作者",
+    "operateTime": "操作時間",
+    "className": "クラス名",
+    "methodName": "メソッド名",
+    "costTime": "処理時間(ms)",
+    "methodParams": "リクエストパラメータ",
+    "returnValue": "戻り値"
   }
 }

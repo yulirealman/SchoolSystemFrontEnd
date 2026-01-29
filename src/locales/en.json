@@ -386,5 +386,15 @@
         "cancelMessage": "Deletion canceled"
       }
     }
+  },
+  "log": {
+    "title": "Log Management",
+    "operator": "Operator",
+    "operateTime": "Operation Time",
+    "className": "Class Name",
+    "methodName": "Method Name",
+    "costTime": "Execution Time (ms)",
+    "methodParams": "Request Parameters",
+    "returnValue": "Return Value"
   }
 }

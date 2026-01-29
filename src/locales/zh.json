@@ -386,5 +386,15 @@
         "cancelMessage": "删除已取消"
       }
     }
+  },
+  "log":{
+    "title": "日志管理",
+    "operator": "操作人",
+    "operateTime": "操作时间",
+    "className": "类名",
+    "methodName": "方法名",
+    "costTime": "耗时(ms)",
+    "methodParams": "请求参数",
+    "returnValue": "返回值"
   }
 }
