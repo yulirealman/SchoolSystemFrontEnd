@@ -408,6 +408,12 @@
       "master": "Master",
       "doctor": "PhD",
       "others": "Other"
-    }
+    },
+    "gender": {
+      "male": "Male",
+      "female": "Female"
+    },
+    "empGender": "Employee Gender Pie Graph",
+    "empJob": "Employee Position Distribution"
   }
 }

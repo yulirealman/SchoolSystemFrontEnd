@@ -408,6 +408,12 @@
       "master": "修士",
       "doctor": "博士",
       "others": "その他"
-    }
+    },
+    "gender": {
+      "male": "男性",
+      "female": "女性"
+    },
+    "empGender": "従業員の性別分布",
+    "empJob": "従業員の役職分布"
   }
 }

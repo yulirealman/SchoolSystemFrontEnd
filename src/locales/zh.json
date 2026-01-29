@@ -408,6 +408,12 @@
       "master": "硕士",
       "doctor": "博士",
       "others": "其他"
-    }
+    },
+    "gender": {
+      "male": "男性",
+      "female": "女性"
+    },
+    "empGender": "员工性别分布",
+    "empJob": "员工职位分布"
   }
 }
