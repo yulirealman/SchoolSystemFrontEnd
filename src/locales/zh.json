@@ -387,7 +387,7 @@
       }
     }
   },
-  "log":{
+  "log": {
     "title": "日志管理",
     "operator": "操作人",
     "operateTime": "操作时间",
@@ -396,5 +396,18 @@
     "costTime": "耗时(ms)",
     "methodParams": "请求参数",
     "returnValue": "返回值"
+  },
+  "charts": {
+    "classCount": "各班学生人数",
+    "studentDegree": "学生学历分布",
+    "degrees": {
+      "middleSchool": "初中",
+      "highSchool": "高中",
+      "college": "大专",
+      "bachelor": "本科",
+      "master": "硕士",
+      "doctor": "博士",
+      "others": "其他"
+    }
   }
 }

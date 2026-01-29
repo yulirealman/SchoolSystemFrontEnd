@@ -127,9 +127,9 @@
       "degrees": {
         "middleSchool": "Middle School",
         "highSchool": "High School",
-        "college": "Associate",
-        "bachelor": "Bachelor’s",
-        "master": "Master’s",
+        "college": "College",
+        "bachelor": "Bachelor's",
+        "master": "Master's",
         "doctor": "PhD"
       }
     },
@@ -396,5 +396,18 @@
     "costTime": "Execution Time (ms)",
     "methodParams": "Request Parameters",
     "returnValue": "Return Value"
+  },
+  "charts": {
+    "classCount": "Student Per Class",
+    "studentDegree": "Student Degree",
+    "degrees": {
+      "middleSchool": "Middle School",
+      "highSchool": "High School",
+      "college": "College",
+      "bachelor": "Bachelor",
+      "master": "Master",
+      "doctor": "PhD",
+      "others": "Other"
+    }
   }
 }

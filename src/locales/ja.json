@@ -396,5 +396,18 @@
     "costTime": "処理時間(ms)",
     "methodParams": "リクエストパラメータ",
     "returnValue": "戻り値"
+  },
+  "charts": {
+    "classCount": "クラス別学生数",
+    "studentDegree": "学生の学歴分布",
+    "degrees": {
+      "middleSchool": "中学校",
+      "highSchool": "高校",
+      "college": "短期大学",
+      "bachelor": "学士",
+      "master": "修士",
+      "doctor": "博士",
+      "others": "その他"
+    }
   }
 }
